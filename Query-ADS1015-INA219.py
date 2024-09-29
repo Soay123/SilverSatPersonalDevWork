@@ -172,7 +172,7 @@ try:
 except Exception as err:
   print(f"Unexpected {err=}, {type(err)=}")
 
-while True:
+while len(object_array) is not 0:
   for item in object_array:
     item.get_next_sample()
   time.sleep(0.25)
