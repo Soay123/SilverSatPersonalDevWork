@@ -7,58 +7,6 @@ import adafruit_ads1x15.ads1015 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 import adafruit_ina219
 
-# Prepare Raspberry Pi:
-# apt install python
-# apt install git
-# git config --global user.name "John Doe"
-# git config --global user.email johndoe@example.com
-# git config --global init.defaultBranch main
-# mkdir ~/.ssh
-# cd ~/.ssh
-# ssk-keygen -t ed25519
-# chmod 700 ~/.ssh
-# chmod 644 ~/.ssh/id_ed25519.pub
-# chmod 600 ~/.ssh/id_ed25519
-#
-# <log into github and add public key>
-#
-# pip3 install --upgrade pip
-# python3 -m venv /path/to/new/virtual/environment
-# /path/to/new/virtual/environment/bin/pip3 install Adafruit-Blinka
-# /path/to/new/virtual/environment/bin/pip3 install adafruit-circuitpython-ads1x15
-# /path/to/new/virtual/environment/bin/pip3 install adafruit-circuitpython-ina219
-# mkdir ~/code
-# cd ~/code
-# git clone <whatever the git path to your repo is>
-# cd repo-name
-## pythonpath should be the path to python3 in your virtual environment
-# pythonpath=$(which python3)
-# pythonpath="#\!$pythonpath"
-# sed -i "1s/.*/$pythonpath/" ./this-file.py
-# chmod +x ./this-file.py
-
-# Documentation:
-# https://docs.circuitpython.org/projects/ads1x15/en/stable/
-# https://docs.circuitpython.org/projects/ina219/en/stable/
-
-# Basic formulas:
-# Watts = V*I = I^2 * R = V^2/R
-# R = V * I/I^2 = V/I = V^2/Watts = Watts/I^2
-# V = I*R = Watts/I
-# I = V/R = Watts/V = (Watts/R)^0.5
-
-# From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
-# However:
-# Based on GPIO limitations per pin. 50 mA total for all of the GPIO pins:
-# 3.3v * .017 amps = .0561 watts max per pin max. Min Resistance equals about 200 ohm
-# 5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
-# From the ADS1015 Datasheet:
-# VDD to GND –0.3 to +0.3 - using whatever volatage qwic is thus 3.3 volts. (So 3.0 to 3.6)
-# Analog input momentary current 100 mA
-# Analog input continuous current 10 mA (which means for 5.2v you actually need at least a 520 ohm resistor)
-# For this experiment the 3.3v lead has a 500 ohm resistor
-# The 5.2 volt lead has a 500 ohm followed by a 4700 ohm followed by a voltage divider followed by 2 4700 ohm.
-
 # Base name should include full path and extra info
 class find_unique_filename:
   """Class to create a unique filename"""
@@ -162,9 +110,9 @@ object_array = []
 # 0x49: Set when the address pin is connected to VDD
 # 0x4A: Set when the address pin is connected to SDA
 # 0x4B: Set when the address pin is connected to SCL
-# Use pin pairs A0+A1,A2+A3 for reference
-# ADS Gain must literally be the float value 2/3 to allow ~ 6volts
-# Somehow when 3.3v and 5v are on, 5v measures 3.8
+# Use pin pairs A0+A1;A2+A3 for reference
+# ADS Gain must literally be the float value 2/3 to allow more than 4 volts
+# However you would only want to do that if VDD is 5v (see note in readme).
 ads_5v = ADS.ADS1015(i2c, gain=1, address=72)
 ads_object_5v = ads_object(ads_5v, ADS.P0, ADS.P1, base_name="ADS1015_72_5v")
 object_array.append(ads_object_5v)
