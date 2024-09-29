@@ -45,10 +45,10 @@ chmod +x ./this-file.py
 
 ## Basic formulas:
 
-- `Watts = V*I = I^2 * R = V^2/R`
-- `R = V \* I/I^2 = V/I = V^2/Watts = Watts/I^2`
-- `V = I\*R = Watts/I`
-- `I = V/R = Watts/V = (Watts/R)^0.5`
+- `Watts` = `V*I` = `I^2 * R` = `V^2/R`
+- `R` = `V \* I/I^2 = V/I` = `V^2/Watts` = `Watts/I^2`
+- `V` = `I\*R` = `Watts/I`
+- `I` = `V/R` = `Watts/V` = `(Watts/R)^0.5`
 
 ## Some reasoning about the electronics needed
 
