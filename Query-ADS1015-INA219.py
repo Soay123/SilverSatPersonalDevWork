@@ -113,41 +113,64 @@ object_array = []
 # Use pin pairs A0+A1;A2+A3 for reference
 # ADS Gain must literally be the float value 2/3 to allow more than 4 volts
 # However you would only want to do that if VDD is 5v (see note in readme).
-ads_5v = ADS.ADS1015(i2c, gain=1, address=72)
-ads_object_5v = ads_object(ads_5v, ADS.P0, ADS.P1, base_name="ADS1015_72_5v")
-object_array.append(ads_object_5v)
+try:
+  ads_5v = ADS.ADS1015(i2c, gain=1, address=72)
+  ads_object_5v = ads_object(ads_5v, ADS.P0, ADS.P1, base_name="ADS1015_72_5v")
+  object_array.append(ads_object_5v)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
 
-ads_3_3v = ADS.ADS1015(i2c, gain=1, address=72)
-ads_object_3_3v = ads_object(ads_3_3v, ADS.P2, ADS.P3, base_name="ADS1015_72_3_3v")
-object_array.append(ads_object_3_3v)
+try:
+  ads_3_3v = ADS.ADS1015(i2c, gain=1, address=72)
+  ads_object_3_3v = ads_object(ads_3_3v, ADS.P2, ADS.P3, base_name="ADS1015_72_3_3v")
+  object_array.append(ads_object_3_3v)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
 
-# ads_5v = ADS.ADS1015(i2c, gain=2/3, address=73)
-# ads_object_5v = ads_object(ads_5v, ADS.P0, ADS.P1, base_name="ADS1015_73_5v")
-# object_array.append(ads_object_5v)
+try:
+  ads_b_1 = ADS.ADS1015(i2c, gain=1, address=73)
+  ads_object_b_1 = ads_object(ads_b_1, ADS.P0, ADS.P1, base_name="ADS1015_73_b_1")
+  object_array.append(ads_object_b_1)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
 
-# ads_3_3v = ADS.ADS1015(i2c, gain=1, address=73)
-# ads_object_3_3v = ads_object(ads_3_3v, ADS.P2, ADS.P3, base_name="ADS1015_73_3_3v")
-# object_array.append(ads_object_3_3v)
-
+try:
+  ads_b_2 = ADS.ADS1015(i2c, gain=1, address=73)
+  ads_object_b_2 = ads_object(ads_b_2, ADS.P2, ADS.P3, base_name="ADS1015_73_b_2")
+  object_array.append(ads_object_b_2)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
 
 # Create the INA219 objects
 # Addresses: Default = 0x40 = 64, A0 soldered = 0x41 = 65,
 # A1 soldered = 0x44 = 68, A0 and A1 soldered = 0x45 = 69
-ina219_1 = adafruit_ina219.INA219(i2c, addr=64)
-ina219_object_1 = ina_object(ina219_1, "ina219_64")
-object_array.append(ina219_object_1)
+try:
+  ina219_1 = adafruit_ina219.INA219(i2c, addr=64)
+  ina219_object_1 = ina_object(ina219_1, "ina219_64")
+  object_array.append(ina219_object_1)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
 
-# ina219_2 = adafruit_ina219.INA219(i2c, addr=65)
-# ina219_object_2 = ina_object(ina219_2, "ina219_65")
-# object_array.append(ina219_object_2)
-#
-# ina219_3 = adafruit_ina219.INA219(i2c, addr=68)
-# ina219_object_3 = ina_object(ina219_3, "ina219_68")
-# object_array.append(ina219_object_3)
-#
-# ina219_4 = adafruit_ina219.INA219(i2c, addr=69)
-# ina219_object_4 = ina_object(ina219_4, "ina219_69")
-# object_array.append(ina219_object_4)
+try:
+  ina219_2 = adafruit_ina219.INA219(i2c, addr=65)
+  ina219_object_2 = ina_object(ina219_2, "ina219_65")
+  object_array.append(ina219_object_2)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
+
+try:
+  ina219_3 = adafruit_ina219.INA219(i2c, addr=68)
+  ina219_object_3 = ina_object(ina219_3, "ina219_68")
+  object_array.append(ina219_object_3)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
+
+try:
+  ina219_4 = adafruit_ina219.INA219(i2c, addr=69)
+  ina219_object_4 = ina_object(ina219_4, "ina219_69")
+  object_array.append(ina219_object_4)
+except Exception as err:
+  print(f"Unexpected {err=}, {type(err)=}")
 
 while True:
   for item in object_array:
