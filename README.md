@@ -31,7 +31,7 @@ cd ~/code
 git clone <whatever the git path to your repo is>
 cd repo-name
 
-pythonpath should be the path to python3 in your virtual environment
+# pythonpath should be the path to python3 in your virtual environment
 pythonpath=$(which python3)
 pythonpath="#\!$pythonpath"
 sed -i "1s/.\*/$pythonpath/" ./this-file.py
