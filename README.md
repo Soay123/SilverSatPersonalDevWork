@@ -6,7 +6,7 @@ My work related to the Silver Sat team
 
 ## Prepare Raspberry Pi:
 
-`
+```
 apt install python
 apt install git
 git config --global user.name "John Doe"
@@ -36,7 +36,7 @@ pythonpath=$(which python3)
 pythonpath="#\!$pythonpath"
 sed -i "1s/.\*/$pythonpath/" ./this-file.py
 chmod +x ./this-file.py
-`
+```
 
 ## Documentation:
 
@@ -52,7 +52,8 @@ chmod +x ./this-file.py
 
 ## Some reasoning about the electronics needed
 
-`From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
+```
+From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
 However:
 Based on GPIO limitations per pin. 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
 3.3v * .017 amps = .0561 watts max per pin max. Min Resistance equals about 200 ohm
@@ -67,4 +68,5 @@ At 5.2v a voltage divider or some other means would be needed to step down the v
 As it turns out voltage dividers are not a good choice because the voltage varies like a circuit in parrell.(which you could make with 3 4700 resistors)
 Another way to do it would to put diodes is series with the load, which will drop the voltage about 0.6v per diode. So to get to 3.3v volts, the diodes ought to do. Then just make sure there is at least a 200 ohm load.
 For this experiment the 3.3v lead has a 500 ohm resistor
-The 5.2 volt lead has a 500 ohm followed by a 4700 ohm followed by a voltage divider followed by 2 4700 ohm.`
+The 5.2 volt lead has a 500 ohm followed by a 4700 ohm followed by a voltage divider followed by 2 4700 ohm.
+```
