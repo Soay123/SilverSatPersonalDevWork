@@ -75,25 +75,18 @@ Vin---|200 Ohm|---|Load|---Gnd
 - 3.3v * .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
 - If the same wattage extends to 5v then:
 - 5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
-
-From the ADS1015 Datasheet:
-VDD to GND –0.3 to +0.3
-QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
-
-Specs:
-Analog input momentary current 100 mA
-Analog input continuous current 10 mA
-So for 5.2v you actually need at least a 520 ohm resistor, and
-for the 3.3v a 200 ohm or greater resistor is needed.
-However:
-
-* At 5.2v a voltage divider or some other means would be needed to step down the voltage
+3. From the ADS1015 Datasheet:
+- VDD to GND –0.3 to +0.3
+- QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
+- Analog input momentary current 100 mA; continuous current 10 mA
+- So for 5.2v you actually need at least a 520 ohm resistor, and
+- For the 3.3v a 200 ohm or greater resistor is needed.
+4. At 5.2v a voltage divider or some other means would be needed to step down the voltage
 to 3.3v.
-* At first a voltage divider might seem like a good choice; however, voltage dividers
+- At first a voltage divider might seem like a good choice; however, voltage dividers
 are not a good choice because the voltage varies like a circuit in parrell.
-(If your interested 3 4700 ohm resistors could be used to make about the correct voltage
-divider)
-* Another way to do it would to put diodes is series with the load.
-That will drop the voltage about .6 volts per diode. (3 diodes)
-In turn at least a 200 ohm load will be needed.
+  - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
+- Another way to do it would to put diodes is series with the load.
+  1. That will drop the voltage about .6 volts per diode. (3 diodes)
+  2. In turn at least a 200 ohm load will be needed.
 ```
