@@ -71,19 +71,19 @@ Vin---|200 Ohm|---|Load|---Gnd
 ```
 1. From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
 2. Based on GPIO limitations per pin:
-- 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
-- 3.3v * .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
-- If the same wattage extends to 5v then:
-- 5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
+  - 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
+  - 3.3v * .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
+  - If the same wattage extends to 5v then:
+  - 5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
 3. From the ADS1015 Datasheet:
-- VDD to GND –0.3 to +0.3
-- QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
-- Analog input momentary current 100 mA; continuous current 10 mA
-- So for 5.2v you actually need at least a 520 ohm resistor, and
-- For the 3.3v a 200 ohm or greater resistor is needed.
+  - VDD to GND –0.3 to +0.3
+  - QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
+  - Analog input momentary current 100 mA; continuous current 10 mA
+  - So for 5.2v you actually need at least a 520 ohm resistor, and
+  - For the 3.3v a 200 ohm or greater resistor is needed.
 4. At 5.2v a voltage divider or some other means would be needed to step down the voltage
 to 3.3v.
-- At first a voltage divider might seem like a good choice; however, voltage dividers
+  - At first a voltage divider might seem like a good choice; however, voltage dividers
 are not a good choice because the voltage varies like a circuit in parrell.
   - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
 - Another way to do it would to put diodes is series with the load.
