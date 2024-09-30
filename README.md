@@ -66,7 +66,9 @@ Vin---|>|---|>|---|>|---|520 Ohm|---|ADS1015|---Gnd
 Vin---|200 Ohm|---|ADS1015|---Gnd
 ```
 
-- I skipped it, but for the INA219 some load is needed, and V cannot be greater than 29.
+- I skipped the INA219
+  1. Some load is needed, but I do not know what max amps are (5mA?)
+  2. Max volts is 26 (5200 Ohm load needed if max 5mA)
 
 ## Some reasoning about the electronics needed
 
