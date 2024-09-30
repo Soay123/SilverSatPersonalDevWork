@@ -80,18 +80,19 @@ Read to the bottom
 
 3. From the ADS1015 Datasheet:
 
-- VDD to GND –0.3 to +0.3
-- QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
-- Analog input momentary current 100 mA; continuous current 10 mA
+- Parameters
+  1. VDD to GND –0.3 to +0.3
+  2. QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
+  3. Analog input momentary current 100 mA; continuous current 10 mA
 - So for 5.2v you actually need at least a 520 ohm resistor, and
 - For the 3.3v a 200 ohm or greater resistor is needed.
 
 4. At 5.2v a voltage divider or some other means would be needed to step down the voltage
    to 3.3v.
 
-- At first a voltage divider might seem like a good choice; however, voltage dividers
-  are not a good choice because the voltage varies like a circuit in parrell.
-- This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
-- Another way to do it would to put diodes is series with the load.
-  1. That will drop the voltage about .6 volts per diode. (3 diodes)
-  2. In turn at least a 200 ohm load will be needed.
+- At first a voltage divider might seem like a good choice
+  1. voltage dividers are not a good choice because the voltage varies like a circuit in parrell.
+  - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
+  2. Another way to do it would to put diodes is series with the load.
+  - That will drop the voltage about .6 volts per diode. (3 diodes)
+  - In turn at least a 200 ohm load will be needed.
