@@ -46,16 +46,17 @@ chmod +x ./this-file.py
 ## Basic formulas:
 
 - `Watts` = `V*I` = `I^2 * R` = `V^2/R`
-- `R` = `V * I/I^2 = V/I` = `V^2/Watts` = `Watts/I^2`
-- `V` = `I*R` = `Watts/I`
+- `R` = `V/I` = `V^2/Watts` = `Watts/I^2`
+- `V` = `I*R` = `Watts/I = (R * Watts)^0.5`
 - `I` = `V/R` = `Watts/V` = `(Watts/R)^0.5`
 
 ## TL;DR
 
-Do not use a voltage divider
+Do not use a voltage divider because it becomes a parallel when connected to gound
 For 5.2 volts use a circuit like:
 
 ```
+Vin--Diode-Diode-Diode--Resistor---Load---Gnd
 Vin---|>|---|>|---|>|---|520 Ohm|---|Load|---Gnd
 ```
 
@@ -68,15 +69,12 @@ Vin---|200 Ohm|---|Load|---Gnd
 ## Some reasoning about the electronics needed
 
 ```
-From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
-However:
-
-Based on GPIO limitations per pin:
-50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
-3.3v * .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
-If the same wattage extends to 5v then:
-5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
-However:
+1. From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
+2. Based on GPIO limitations per pin:
+a) 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
+b) 3.3v * .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
+c) If the same wattage extends to 5v then:
+* 5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
 
 From the ADS1015 Datasheet:
 VDD to GND –0.3 to +0.3
