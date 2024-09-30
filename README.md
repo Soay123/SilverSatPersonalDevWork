@@ -71,10 +71,10 @@ Vin---|200 Ohm|---|Load|---Gnd
 ```
 1. From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
 2. Based on GPIO limitations per pin:
-a) 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
-b) 3.3v * .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
-c) If the same wattage extends to 5v then:
-* 5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
+- 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
+- 3.3v * .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
+- If the same wattage extends to 5v then:
+- 5v * .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
 
 From the ADS1015 Datasheet:
 VDD to GND –0.3 to +0.3
