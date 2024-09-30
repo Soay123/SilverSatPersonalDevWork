@@ -57,14 +57,16 @@ chmod +x ./this-file.py
 
 ```
 Vin--Diode-Diode-Diode--Resistor---Load---Gnd
-Vin---|>|---|>|---|>|---|520 Ohm|---|Load|---Gnd
+Vin---|>|---|>|---|>|---|520 Ohm|---|ADS1015|---Gnd
 ```
 
-For 3.3 vollts use a circuit like:
+- For 3.3 vollts use a circuit like:
 
 ```
-Vin---|200 Ohm|---|Load|---Gnd
+Vin---|200 Ohm|---|ADS1015|---Gnd
 ```
+
+- I skipped it, but for the INA219 some load is needed, and V cannot be greater than 29.
 
 ## Some reasoning about the electronics needed
 
