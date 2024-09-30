@@ -73,10 +73,10 @@ Read to the bottom
 1. A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
 2. Based on GPIO limitations per pin:
 
-- 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
+- 50 mA total for all of the GPIO pins, and .017 amps at 3.3v max for one:
 - 3.3v \* .017 amps = .0561 watts max per pin max. So min Resistance equals about 200 ohm
 - If the same wattage extends to 5v then:
-- 5v \* .01122 amps =.0561 watts. Min Resistance equals about 450 ohm (but see below)
+- 5v \* .01122 amps =.0561 watts. Min Resistance equals about 450 ohm
 
 3. From the ADS1015 Datasheet:
 
@@ -93,6 +93,8 @@ Read to the bottom
 - At first a voltage divider might seem like a good choice
   1. voltage dividers are not a good choice because the voltage varies like a circuit in parrell.
   - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
-  2. Another way to do it would to put diodes is series with the load.
+  2. Another way to do it would be to put diodes is series with the load.
   - That will drop the voltage about .6 volts per diode. (3 diodes)
   - In turn at least a 200 ohm load will be needed.
+  - This is a constant offset
+  3. Use 5v for VDD, with a 2/3 gain setting on the ADS
