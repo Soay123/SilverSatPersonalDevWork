@@ -47,7 +47,7 @@ chmod +x ./this-file.py
 
 - `Watts` = `V*I` = `I^2 * R` = `V^2/R`
 - `R` = `V/I` = `V^2/Watts` = `Watts/I^2`
-- `V` = `I*R` = `Watts/I = (R * Watts)^0.5`
+- `V` = `I*R` = `Watts/I` = `(R * Watts)^0.5`
 - `I` = `V/R` = `Watts/V` = `(Watts/R)^0.5`
 
 ## TL;DR
