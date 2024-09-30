@@ -68,7 +68,9 @@ Vin---|200 Ohm|---|Load|---Gnd
 
 ## Some reasoning about the electronics needed
 
-1. From this: A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
+Read to the bottom
+
+1. A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
 2. Based on GPIO limitations per pin:
 
 - 50 mA total for all of the GPIO pins and .017 amps at 3.3v max:
