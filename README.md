@@ -50,6 +50,21 @@ chmod +x ./this-file.py
 - `V` = `I*R` = `Watts/I`
 - `I` = `V/R` = `Watts/V` = `(Watts/R)^0.5`
 
+## TL;DR
+
+Do not use a voltage divider
+For 5.2 volts use a circuit like:
+
+```
+Vin---|>|---|>|---|>|---|520 Ohm|---|Load|---Gnd
+```
+
+For 3.3 vollts use a circuit like:
+
+```
+Vin---|200 Ohm|---|Load|---Gnd
+```
+
 ## Some reasoning about the electronics needed
 
 ```
@@ -65,7 +80,7 @@ However:
 
 From the ADS1015 Datasheet:
 VDD to GND –0.3 to +0.3
-QWIC is is ued for VDD, thus 3.3 volts. (So 3.0 to 3.6)
+QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
 
 Specs:
 Analog input momentary current 100 mA
