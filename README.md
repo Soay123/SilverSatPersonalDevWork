@@ -67,8 +67,8 @@ Vin---|200 Ohm|---|ADS1015|---Gnd
 ```
 
 - I skipped the INA219
-  1. Some load is needed, but I do not know what max amps are (5mA?)
-  2. Max volts is 26 (5200 Ohm load needed if max 5mA)
+  1. Specs: High Side (i.e. in series with load). 26 volts max. 3.2 Amps max.
+  2. Thus min load is 8.125 ohm, and max watts is 83.2.
 
 ## Some reasoning about the electronics needed
 
