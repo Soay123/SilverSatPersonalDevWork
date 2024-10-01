@@ -40,8 +40,10 @@ chmod +x ./this-file.py
 
 ## Documentation:
 
-- [ads1x15](https://docs.circuitpython.org/projects/ads1x15/en/stable/)
-- [ina219](https://docs.circuitpython.org/projects/ina219/en/stable/)
+- [ADS1x15 API](https://docs.circuitpython.org/projects/ads1x15/en/stable/)
+- [ADS1015 Datasheet](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf)
+- [INA219 API](https://docs.circuitpython.org/projects/ina219/en/stable/)
+- [INA219 Datasheet](https://cdn-learn.adafruit.com/downloads/pdf/adafruit-ina219-current-sensor-breakout.pdf)
 
 ## Basic formulas:
 
