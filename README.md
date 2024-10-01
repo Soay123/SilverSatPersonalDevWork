@@ -53,6 +53,7 @@ chmod +x ./this-file.py
 ## TL;DR
 
 - Do not use a voltage divider. It becomes a parallel circuit when connected to gound
+- ADS1015 provides only voltage information.
 - For 5.2 volts use a circuit like:
 
 ```
@@ -69,6 +70,7 @@ Vin---|200 Ohm|---|ADS1015|---Gnd
 - I skipped the INA219
   1. Specs: High Side (i.e. in series with load). 26 volts max. 3.2 Amps max.
   2. Thus min load is 8.125 ohm, and max watts is 83.2.
+  3. Provides voltage and current information.
 
 ## Some reasoning about the electronics needed
 
