@@ -99,8 +99,8 @@ Read to the bottom
 - At first a voltage divider might seem like a good choice
   1. voltage dividers are not a good choice because the voltage varies like a circuit in parrell.
   - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
-  2. Another way to do it would be to put diodes is series with the load.
-  - That will drop the voltage about .6 volts per diode. (3 diodes)
-  - In turn at least a 200 ohm load will be needed.
-  - This is a constant offset
-  3. Use 5v for VDD, with a 2/3 gain setting on the ADS
+- Another way to do it would be to put diodes is series with the load.
+  1. That will drop the voltage about .6 volts per diode. (3 diodes)
+  2. In turn at least a 200 ohm load will be needed.
+  3. This is a constant offset
+- And finally another way is to use 5v for VDD, with a 2/3 gain setting on the ADS
