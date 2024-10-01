@@ -54,17 +54,17 @@ chmod +x ./this-file.py
 
 - Do not use a voltage divider. It becomes a parallel circuit when connected to gound
 - ADS1015 provides only voltage information.
-- For 5.2 volts use a circuit like:
+- For 5.2 volts, with .6 volt drop per diode, 10 mA max, use a circuit like:
 
 ```
 Vin--Diode-Diode-Diode--Resistor---Load---Gnd
-Vin---|>|---|>|---|>|---|520 Ohm|---|ADS1015|---Gnd
+Vin---|>|---|>|---|>|---|360 Ohm|---|ADS1015|---Gnd
 ```
 
-- For 3.3 vollts use a circuit like:
+- For 3.3 volts use a circuit like:
 
 ```
-Vin---|200 Ohm|---|ADS1015|---Gnd
+Vin---|360 Ohm|---|ADS1015|---Gnd
 ```
 
 - I skipped the INA219
@@ -76,7 +76,7 @@ Vin---|200 Ohm|---|ADS1015|---Gnd
 
 Read to the bottom
 
-1. A quater watt resistor at 5 volts must have a resistance of at least 100 ohm
+1. A quarter watt resistor at 5 volts must have a resistance of at least 100 ohm
 2. Based on GPIO limitations per pin:
 
 - 50 mA total for all of the GPIO pins, and .017 amps at 3.3v max for one:
@@ -86,21 +86,21 @@ Read to the bottom
 
 3. From the ADS1015 Datasheet:
 
-- Parameters
-  1. VDD to GND –0.3 to +0.3
-  2. QWIIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
-  3. Analog input momentary current 100 mA; continuous current 10 mA
-- So for 5.2v you actually need at least a 520 ohm resistor, and
-- For the 3.3v a 200 ohm or greater resistor is needed.
+- Parameters for ADS1015
+  1. Can measure up to VDD +0.3 volts
+  2. Analog input momentary current 100 mA; continuous current 10 mA
+  3. QWIIC Shim is is used for VDD
+  - Thus 3.3 volts. (So 3.6 volts max)
+  - `3.6/0.010` = `R` = `360 Ohm`
+  4. If 5.2v used for VDD, then you actually need at least a 520 ohm resistor
 
-4. At 5.2v a voltage divider or some other means would be needed to step down the voltage
-   to 3.3v.
+4. If trying to measure above 3.6v some other means would be needed to step down the voltage.
 
 - At first a voltage divider might seem like a good choice
   1. voltage dividers are not a good choice because the voltage varies like a circuit in parrell.
   - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
 - Another way to do it would be to put diodes is series with the load.
   1. That will drop the voltage about .6 volts per diode. (3 diodes)
-  2. In turn at least a 200 ohm load will be needed.
+  2. In turn at least a 360 ohm load will be needed.
   3. This is a constant offset
-- And finally another way is to use 5v for VDD, with a 2/3 gain setting on the ADS
+- And finally another way is to use 5v for VDD, 520 Ohm resistor, with a 2/3 gain setting on the ADS
