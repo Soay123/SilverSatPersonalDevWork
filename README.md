@@ -54,25 +54,30 @@ chmod +x ./this-file.py
 
 ## TL;DR
 
-- Do not use a voltage divider. It becomes a parallel circuit when connected to gound
-- ADS1015 provides only voltage information.
+1. ADS1015 provides only voltage information.
+
 - To measure 5.2 volts, with a 3.3v ADS1015, with .6 volt drop per diode, 10 mA max, use a circuit like:
+- Use a resistor with at least 360 Ohm impedance
 
 ```
 Vin--Diode-Diode-Diode--Resistor---Load---Gnd
 Vin---|>|---|>|---|>|---|360 Ohm|---|ADS1015|---Gnd
 ```
 
-- To measure up to 3.3 volts with an ADS1015 at 3.3v VDD, use a circuit like:
+2. To measure up to 3.6 volts with an ADS1015 at 3.3v VDD, use a circuit like:
+
+- Use a resistor with at least 360 Ohm impedance
 
 ```
 Vin---|360 Ohm|---|ADS1015|---Gnd
 ```
 
-- To measure 5.2 volts, with a 5v ADS1015, 10 mA max: Set gain to 2/3, and use a circuit like:
+3. To measure 5.2 volts, with a 5v ADS1015, 10 mA max: Set gain to 2/3, and use a circuit like:
+
+- Use a resistor with at least 530 Ohm impedance
 
 ```
-Vin---|520 Ohm|---|ADS1015|---Gnd
+Vin---|530 Ohm|---|ADS1015|---Gnd
 ```
 
 - I skipped the INA219
