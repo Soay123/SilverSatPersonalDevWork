@@ -88,7 +88,7 @@ Read to the bottom
 
 - Parameters
   1. VDD to GND –0.3 to +0.3
-  2. QWIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
+  2. QWIIC is is used for VDD, thus 3.3 volts. (So 3.0 to 3.6)
   3. Analog input momentary current 100 mA; continuous current 10 mA
 - So for 5.2v you actually need at least a 520 ohm resistor, and
 - For the 3.3v a 200 ohm or greater resistor is needed.
