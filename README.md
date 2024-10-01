@@ -81,10 +81,13 @@ Vin---|360 Ohm|---|ADS1015|---Gnd
 Vin---|530 Ohm|---|ADS1015|---Gnd
 ```
 
-- I skipped the INA219
-  1. Specs: High Side (i.e. in series with load). 26 volts max. 3.2 Amps max.
+- Regarding the INA219
+  1. Specs: High Side (i.e. in series before load, rather than at ground). 26 volts max. 3.2 Amps max.
   2. Thus min load is 8.125 ohm, and max watts is 83.2.
   3. Provides voltage and current information.
+  4. 12 Bit ADC - gain needs to be set correctly to keep from overflowing
+  5. Detailed Python example in datasheet
+  6. Put in the appropriate precautions if you are using an inductive load.
 
 ## Some reasoning about the electronics needed
 
