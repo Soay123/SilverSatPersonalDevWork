@@ -88,6 +88,30 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
   4. 12 Bit ADC - gain needs to be set correctly to keep from overflowing
   5. Detailed Python example in datasheet
   6. Put in the appropriate precautions if you are using an inductive load.
+  7. A very incomplete example:
+
+```
+# voltage on V- (load side)
+bus_voltage = ina219.bus_voltage
+
+# voltage between V+ and V- across the shunt
+shunt_voltage = ina219.shunt_voltage
+
+# voltage on V+ (voltage source side)
+v_plus = bus_voltage + shunt_voltage
+
+# current in mA
+current = ina219.current
+
+# Shunt current
+shunt_current = current / 1000
+
+# Calculated power
+power_calc = bus_voltage * shunt_current
+
+# power in watts from register
+power = ina219.power
+```
 
 ## Some reasoning about the electronics needed
 
@@ -121,3 +145,7 @@ Read to the bottom
   2. In turn at least a 360 ohm load will be needed.
   3. This is a constant offset
 - And finally another way is to use 5v for VDD, 520 Ohm resistor, with a 2/3 gain setting on the ADS
+
+```
+
+```
