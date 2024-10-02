@@ -109,6 +109,9 @@ shunt_current = current / 1000
 # Calculated power
 power_calc = bus_voltage * shunt_current
 
+# Does that mean I can calculate impedance too?
+impedance_calc = bus_voltage / shunt_current
+
 # power in watts from register
 power = ina219.power
 ```
