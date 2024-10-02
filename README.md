@@ -61,7 +61,7 @@ chmod +x ./this-file.py
 - Use a resistor with at least 360 Ohm impedance, and 3 diodes with a .6 to .7 voltage drop per diode:
 
 ```
-Vin--Diode-Diode-Diode--Resistor---Load---Gnd
+Vin--Diode-Diode-Diode---Resistor-----Load------Gnd
 Vin---|>|---|>|---|>|---|360 Ohm|---|ADS1015|---Gnd
 ```
 
