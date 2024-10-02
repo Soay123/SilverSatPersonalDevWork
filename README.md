@@ -54,41 +54,43 @@ chmod +x ./this-file.py
 
 ## TL;DR
 
-1. ADS1015 provides only voltage information.
+1. ADS1015 provides only voltage information
+2. Seems likely that the measured voltage must share the same ground as QWIIC VDD
+3. To measure 5.2 volts, with a ADS1015 at 3.3v VDD, at 10 mA:
 
-2. To measure 5.2 volts, with a 3.3v ADS1015, with .6 volt drop per diode, 10 mA max, use a circuit like:
-
-- Use a resistor with at least 360 Ohm impedance
+- Use a resistor with at least 360 Ohm impedance, and 3 diodes with a .6 to .7 voltage drop per diode:
 
 ```
 Vin--Diode-Diode-Diode--Resistor---Load---Gnd
 Vin---|>|---|>|---|>|---|360 Ohm|---|ADS1015|---Gnd
 ```
 
-3. To measure up to 3.6 volts with an ADS1015 at 3.3v VDD, use a circuit like:
+4. To measure up to 3.6 volts with an ADS1015 at 3.3v VDD:
 
-- Use a resistor with at least 360 Ohm impedance
+- Use a resistor with at least 360 Ohm impedance, and use a circuit like:
 
 ```
 Vin---|360 Ohm|---|ADS1015|---Gnd
 ```
 
-4. To measure 5.2 volts, with a 5v ADS1015, 10 mA max: Set gain to 2/3, and use a circuit like:
+5. To measure 5.2 volts, with a ADS1015 at 5v VDD, 10 mA max:
 
-- Use a resistor with at least 530 Ohm impedance
+- Set gain to 2/3, use a resistor with at least 530 Ohm impedance, and use a circuit like:
 
 ```
 Vin---|530 Ohm|---|ADS1015|---Gnd
 ```
 
-- Regarding the INA219
-  1. Specs: High Side (i.e. in series before load, rather than at ground). 26 volts max. 3.2 Amps max.
-  2. Thus min load is 8.125 ohm, and max watts is 83.2.
-  3. Provides voltage and current information.
-  4. 12 Bit ADC - gain needs to be set correctly to keep from overflowing
-  5. Detailed Python example in datasheet
-  6. Put in the appropriate precautions if you are using an inductive load.
-  7. A very incomplete example:
+6. Regarding the INA219
+
+- Specs: High Side (i.e. in series before load, rather than at ground). 26 volts max. 3.2 Amps max.
+- Ground does NOT need to be shared between load and QWIIC VDD
+- Thus min load is 8.125 ohm, and max watts is 83.2.
+- Provides voltage and current information too.
+- 12 Bit ADC - gain needs to be set correctly to keep from overflowing
+- Detailed Python example in datasheet
+- Put in the appropriate precautions if you are using an inductive load.
+- A very incomplete example:
 
 ```
 # voltage on V- (load side)
@@ -136,9 +138,9 @@ Read to the bottom
   3. QWIIC Shim is is used for VDD
   - Thus 3.3 volts. (So 3.6 volts max)
   - `3.6/0.010` = `R` = `360 Ohm`
-  4. If 5.2v used for VDD, then you actually need at least a 520 ohm resistor
+  4. If 5v used for VDD, and 5.3v max, then you actually need at least a 530 ohm resistor
 
-4. If trying to measure above 3.6v some other means would be needed to step down the voltage.
+4. If trying to measure above 3.6v, then some other means would be needed to step down the voltage.
 
 - At first a voltage divider might seem like a good choice
   1. voltage dividers are not a good choice because the voltage varies like a circuit in parrell.
@@ -147,8 +149,4 @@ Read to the bottom
   1. That will drop the voltage about .6 volts per diode. (3 diodes)
   2. In turn at least a 360 ohm load will be needed.
   3. This is a constant offset
-- And finally another way is to use 5v for VDD, 520 Ohm resistor, with a 2/3 gain setting on the ADS
-
-```
-
-```
+- And finally another way is to use 5v for VDD, 530 Ohm resistor, with a 2/3 gain setting on the ADS
