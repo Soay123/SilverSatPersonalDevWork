@@ -74,8 +74,7 @@ class ina_object:
     self.out = ""
     self.file_path = ""
     self.base_name=base_name
-    ADCResolution.
-    # Optional stuff
+    # Default values
     # set_calibration_32V_2A()    Initialize chip for 32V max and up to 2A (default)
     #   Configures to INA219 to be able to measure up to 32V and 2A of current. Counter overflow occurs at 3.2A.
     #   self.bus_voltage_range = BusVoltageRange.RANGE_32V
@@ -134,14 +133,10 @@ object_array = []
 ina_addresses = [64, 65, 68, 69]
 ads_addresses = [72, 73]
 # Can be configured with I2C addresses Default address 72, Soldered 73
-# 0x48: The default address, which is set when the address pin is connected to GND
-# 0x49: Set when the address pin is connected to VDD
-# 0x4A: Set when the address pin is connected to SDA
-# 0x4B: Set when the address pin is connected to SCL
 # Use pin pairs A0+A1;A2+A3 for reference
 # Gnd of measured VIN is same as QWIIC Gnd
 # And max Vin is +.3v above QWIIC VDD (3.3v)
-# Thus gain is always 1
+# Thus gain is always 1. You cannot use a gain of 2/3 unless QWIIC VDD is 5v
 for address in ads_addresses:
   try:
     ads_5v = ADS.ADS1015(i2c, gain=1, address=address)
@@ -160,7 +155,7 @@ for address in ads_addresses:
 # Create the INA219 objects
 # Addresses: Default = 0x40 = 64, A0 soldered = 0x41 = 65,
 # A1 soldered = 0x44 = 68, A0 and A1 soldered = 0x45 = 69
-for address in ads_addresses:
+for address in ina_addresses:
   try:
     ina219_1 = INA219(i2c, addr=address)
     ina219_object_1 = ina_object(ina219_1, f"ina219_{address}")
