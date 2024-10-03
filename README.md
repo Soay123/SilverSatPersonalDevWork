@@ -83,40 +83,12 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
 
 6. Regarding the INA219
 
-- Specs: High Side (i.e. in series before load, rather than at ground). 26 volts max. 3.2 Amps max.
+- High Side (i.e. in series before load, rather than at ground).
+- Do not exceed 64 watts and 3.2 amps.
 - Ground does NOT need to be shared between load and QWIIC VDD
-- Thus min load is 8.125 ohm, and max watts is 83.2.
-- Provides voltage and current information too.
 - 12 Bit ADC - gain needs to be set correctly to keep from overflowing
-- Detailed Python example in datasheet
 - Put in the appropriate precautions if you are using an inductive load.
-- A very incomplete example:
-
-```
-# voltage on V- (load side)
-bus_voltage = ina219.bus_voltage
-
-# voltage between V+ and V- across the shunt
-shunt_voltage = ina219.shunt_voltage
-
-# voltage on V+ (voltage source side)
-v_plus = bus_voltage + shunt_voltage
-
-# current in mA
-current = ina219.current
-
-# Shunt current
-shunt_current = current / 1000
-
-# Calculated power
-power_calc = bus_voltage * shunt_current
-
-# Does that mean I can calculate impedance too?
-impedance_calc = bus_voltage / shunt_current
-
-# power in watts from register
-power = ina219.power
-```
+- INA219 measures voltage and current (and therefore also power)
 
 ## Some reasoning about the electronics needed
 
