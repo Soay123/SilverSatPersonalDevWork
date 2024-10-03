@@ -5,8 +5,8 @@ import board
 import busio
 import adafruit_ads1x15.ads1015 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-import adafruit_ina219
-
+# import adafruit_ina219
+from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219, Gain, Mode
 # Base name should include full path and extra info
 class find_unique_filename:
   """Class to create a unique filename"""
@@ -69,15 +69,25 @@ class ads_object:
 
 class ina_object:
   """Class responsible for querying the INA and then writing data to a file and the screen."""
-  def __init__(self, ina:adafruit_ina219.INA219, base_name:str="_"):
+  def __init__(self, ina:INA219, base_name:str="_"):
     self.ina = ina
     self.out = ""
     self.file_path = ""
     self.base_name=base_name
+    ADCResolution.
+    # Optional stuff
+    # set_calibration_32V_2A()    Initialize chip for 32V max and up to 2A (default)
+    #   Configures to INA219 to be able to measure up to 32V and 2A of current. Counter overflow occurs at 3.2A.
+    #   self.bus_voltage_range = BusVoltageRange.RANGE_32V
+    #   self.gain = Gain.DIV_8_320MV
+    #   self.bus_adc_resolution = ADCResolution.ADCRES_12BIT_1S
+    #   self.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_1S
+    #   self.mode = Mode.SANDBVOLT_CONTINUOUS
+    # overflow is Math Overflow bit in Bus Voltage register
     addr = self.ina.i2c_addr
     unique_name=find_unique_filename(base_name=f"{self.base_name}_{addr}",suffix=".csv")
     self.file_path=unique_name.getname()
-    data = f"\"time_in_ms\",\"bus_voltage\",\"shunt_voltage\",\"current\",\"power\"\n"
+    data = f"\"time_in_ms\",\"bus_voltage\",\"shunt_voltage\",\"v_plus\",\"current_ma\",\"power_calc\",\"power\",\"impedance\"\n"
     with open(self.file_path, "w") as file:
       file.write(data)
     self.start_time = int(time.time() * 1000)
@@ -87,12 +97,29 @@ class ina_object:
     with open(self.file_path, "a") as file:
       file.write(data)
   def create_output_string(self):
+    # voltage on V- (load side)
     bus_voltage = self.ina.bus_voltage
+    # voltage between V+ and V- across the shunt
     shunt_voltage = self.ina.shunt_voltage
+    # voltage on V+ (voltage source side)
+    v_plus = bus_voltage + shunt_voltage
+    # current in mA
     current = self.ina.current
+    # Shunt current
+    shunt_current = current / 1000
+    # Calculated power
+    power_calc = bus_voltage * shunt_current
+    # Does that mean I can calculate impedance too?
+    impedance_calc = bus_voltage / shunt_current
+    # power in watts from register
     power = self.ina.power
     time_in_ms = int(time.time() * 1000) - self.start_time
-    self.out = f"{time_in_ms},{bus_voltage},{shunt_voltage},{current},{power}"
+    self.out = ""
+    # Check internal calculations haven't overflowed (doesn't detect ADC overflows)
+    if self.ina.overflow:
+      print("Internal Math Overflow Detected (non ADC) 3.2 Amps exceeded!")
+    else:
+      self.out = f"{time_in_ms},{bus_voltage},{shunt_voltage},{v_plus},{current},{power_calc},{power},{impedance_calc}"
   def display_on_screen(self):
     print(f"{self.out}")
   def get_next_sample(self):
@@ -104,73 +131,42 @@ class ina_object:
 i2c = busio.I2C(board.SCL, board.SDA)
 
 object_array = []
-
+ina_addresses = [64, 65, 68, 69]
+ads_addresses = [72, 73]
 # Can be configured with I2C addresses Default address 72, Soldered 73
 # 0x48: The default address, which is set when the address pin is connected to GND
 # 0x49: Set when the address pin is connected to VDD
 # 0x4A: Set when the address pin is connected to SDA
 # 0x4B: Set when the address pin is connected to SCL
 # Use pin pairs A0+A1;A2+A3 for reference
-# ADS Gain must literally be the float value 2/3 to allow more than 4 volts
-# However you would only want to do that if VDD is 5v (see note in readme).
-try:
-  ads_5v = ADS.ADS1015(i2c, gain=1, address=72)
-  ads_object_5v = ads_object(ads_5v, ADS.P0, ADS.P1, base_name="ADS1015_72_5v")
-  object_array.append(ads_object_5v)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
+# Gnd of measured VIN is same as QWIIC Gnd
+# And max Vin is +.3v above QWIIC VDD (3.3v)
+# Thus gain is always 1
+for address in ads_addresses:
+  try:
+    ads_5v = ADS.ADS1015(i2c, gain=1, address=address)
+    ads_object_5v = ads_object(ads_5v, ADS.P0, ADS.P1, base_name=f"ADS1015_{address}_5v")
+    object_array.append(ads_object_5v)
+  except Exception as err:
+    print(f"Unexpected {err=}, {type(err)=}")
 
-try:
-  ads_3_3v = ADS.ADS1015(i2c, gain=1, address=72)
-  ads_object_3_3v = ads_object(ads_3_3v, ADS.P2, ADS.P3, base_name="ADS1015_72_3_3v")
-  object_array.append(ads_object_3_3v)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
-
-try:
-  ads_b_1 = ADS.ADS1015(i2c, gain=1, address=73)
-  ads_object_b_1 = ads_object(ads_b_1, ADS.P0, ADS.P1, base_name="ADS1015_73_b_1")
-  object_array.append(ads_object_b_1)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
-
-try:
-  ads_b_2 = ADS.ADS1015(i2c, gain=1, address=73)
-  ads_object_b_2 = ads_object(ads_b_2, ADS.P2, ADS.P3, base_name="ADS1015_73_b_2")
-  object_array.append(ads_object_b_2)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
+  try:
+    ads_3_3v = ADS.ADS1015(i2c, gain=1, address=address)
+    ads_object_3_3v = ads_object(ads_3_3v, ADS.P2, ADS.P3, base_name=f"ADS1015_{address}_3_3v")
+    object_array.append(ads_object_3_3v)
+  except Exception as err:
+    print(f"Unexpected {err=}, {type(err)=}")
 
 # Create the INA219 objects
 # Addresses: Default = 0x40 = 64, A0 soldered = 0x41 = 65,
 # A1 soldered = 0x44 = 68, A0 and A1 soldered = 0x45 = 69
-try:
-  ina219_1 = adafruit_ina219.INA219(i2c, addr=64)
-  ina219_object_1 = ina_object(ina219_1, "ina219_64")
-  object_array.append(ina219_object_1)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
-
-try:
-  ina219_2 = adafruit_ina219.INA219(i2c, addr=65)
-  ina219_object_2 = ina_object(ina219_2, "ina219_65")
-  object_array.append(ina219_object_2)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
-
-try:
-  ina219_3 = adafruit_ina219.INA219(i2c, addr=68)
-  ina219_object_3 = ina_object(ina219_3, "ina219_68")
-  object_array.append(ina219_object_3)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
-
-try:
-  ina219_4 = adafruit_ina219.INA219(i2c, addr=69)
-  ina219_object_4 = ina_object(ina219_4, "ina219_69")
-  object_array.append(ina219_object_4)
-except Exception as err:
-  print(f"Unexpected {err=}, {type(err)=}")
+for address in ads_addresses:
+  try:
+    ina219_1 = INA219(i2c, addr=address)
+    ina219_object_1 = ina_object(ina219_1, f"ina219_{address}")
+    object_array.append(ina219_object_1)
+  except Exception as err:
+    print(f"Unexpected {err=}, {type(err)=}")
 
 while len(object_array) is not 0:
   for item in object_array:
