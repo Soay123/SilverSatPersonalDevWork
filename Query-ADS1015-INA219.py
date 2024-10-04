@@ -48,6 +48,8 @@ class ads_object:
     with open(self.file_path, "w") as file:
       file.write(data)
     self.start_time = int(time.time() * 1000)
+    start_time_as_str = f"{self.start_time}"
+    self.start_time_str_len = len(start_time_as_str)
   def write_to_file(self):
     data = f"{self.out}\n"
     # This is kind of a bumber because I constantly open and close the file
@@ -57,7 +59,9 @@ class ads_object:
     ads_voltage = 0.0
     ads_voltage = self.channel.voltage
     # adc_value = chan_vcc.value
-    time_in_ms = int(time.time() * 1000) - self.start_time
+    time_in_ms_raw = int(time.time() * 1000) - self.start_time
+    time_in_ms_as_str = f"{time_in_ms_raw}"
+    time_in_ms = time_in_ms_as_str.zfill(self.start_time_str_len)
     self.out = f"{time_in_ms},{ads_voltage}"
   def display_on_screen(self):
     print(f"{self.out}")
@@ -90,6 +94,8 @@ class ina_object:
     with open(self.file_path, "w") as file:
       file.write(data)
     self.start_time = int(time.time() * 1000)
+    start_time_as_str = f"{self.start_time}"
+    self.start_time_str_len = len(start_time_as_str)
   def write_to_file(self):
     data = f"{self.out}\n"
     # This is kind of a bumber because I constantly open and close the file
@@ -112,7 +118,9 @@ class ina_object:
     impedance_calc = bus_voltage / shunt_current
     # power in watts from register
     power = self.ina.power
-    time_in_ms = int(time.time() * 1000) - self.start_time
+    time_in_ms_raw = int(time.time() * 1000) - self.start_time
+    time_in_ms_as_str = f"{time_in_ms_raw}"
+    time_in_ms = time_in_ms_as_str.zfill(self.start_time_str_len)
     self.out = ""
     # Check internal calculations haven't overflowed (doesn't detect ADC overflows)
     if self.ina.overflow:
