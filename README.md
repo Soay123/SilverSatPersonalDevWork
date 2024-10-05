@@ -65,6 +65,7 @@ chmod +x ./this-file.py
 - Gain = 2/3 = 6.144v max; Gain = 1 = 4.096v max
 - Max gain error of .04% occurs at 85 degrees celsius.
 - Differential offset error at 3v over entire operating tempeture range is about 3 uV
+- Requires an input of at least 250 uA, .256v, means that at bottom of range R <=1024
 
 2. Regarding the INA219
 
@@ -105,11 +106,45 @@ Read to the bottom
 
 4. If trying to measure above 3.6v, then some other means would be needed to step down the voltage.
 
-- At first a voltage divider might seem like a good choice (which it might be for AC)
-  1. Voltage dividers made of resistors are not a good choice if you need current.
+- At first a voltage divider might seem like a good choice; however:
+
+  1. Lets look at the circuit using resistors. R1 and R3 are parrellel to each other, so R1's impedance (the load) needs to be in the mega ohm range (either from a resistor or IC), but then you have almost no current. (and that will not work for specs above)
+
+  ```
+  Vin----R2---|---R3---|
+              |        |
+              R1       |-Gnd
+              |--------|
+  ```
+
+  2. Voltage dividers can be made of capacitors too; however,
+
+  - C3 and R1 are now in parrelll
+    https://cpb-us-e2.wpmucdn.com/sites.uci.edu/dist/b/1759/files/2017/12/Week1_VoltageDivider_Cap_RC.pdf
+    https://cpb-us-e2.wpmucdn.com/sites.uci.edu/dist/b/1759/files/2017/12/Week1_VoltageDivider_Cap_RC.pdf
+
+  ```
+  Vin----|C2|---|---|C3|--|
+                |         |
+                R1        |-Gnd
+                |---------|
+  ```
+
+  3. Version 2
+
+  ```
+  Vin----R2---|---|C3|--|
+              |         |
+              R1        |-Gnd
+              |---------|
+  ```
+
   - Both legs share a common ground. Thus voltage is calculated like a circuit in parrell. The only time this works is if you use impedance in the mega ohm range (either from a resistor or IC), but then you have almost no current.
     - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
   - This could also be solved by using a voltage divider composed of capacitors rather than resistors - but then you need AC.
+  - This could also be solved using a low pass
+    https://www.we-online.com/components/media/o790814v410%20ANP124_Capacitive_Power_Supply_EN.pdf
+
 - Another way to do it would be to put diodes is series with the load.
   1. That will drop the voltage about .6 volts per diode. (3 diodes)
   2. In turn at least a 360 ohm load will be needed.
