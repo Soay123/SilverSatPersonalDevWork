@@ -46,18 +46,18 @@
      borderopacity="1.0"
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
-     inkscape:zoom="0.44785584"
-     inkscape:cx="209.88897"
-     inkscape:cy="-1.1164307"
+     inkscape:zoom="0.78239463"
+     inkscape:cx="215.36446"
+     inkscape:cy="-3.8343822"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="true"
      units="px"
      inkscape:snap-text-baseline="true"
      inkscape:window-width="1472"
-     inkscape:window-height="920"
+     inkscape:window-height="801"
      inkscape:window-x="0"
-     inkscape:window-y="36"
+     inkscape:window-y="37"
      inkscape:window-maximized="0"
      inkscape:snap-center="false"
      inkscape:snap-object-midpoints="false"
@@ -73,7 +73,24 @@
      inkscape:snap-grids="true"
      inkscape:showpageshadow="2"
      inkscape:pagecheckerboard="0"
-     inkscape:deskcolor="#d1d1d1" />
+     inkscape:deskcolor="#d1d1d1">
+    <inkscape:grid
+       id="grid1"
+       units="px"
+       originx="0"
+       originy="0"
+       spacingx="1"
+       spacingy="0.99999999"
+       empcolor="#0099e5"
+       empopacity="0.30196078"
+       color="#0099e5"
+       opacity="0.14901961"
+       empspacing="5"
+       dotted="false"
+       gridanglex="30"
+       gridanglez="30"
+       visible="true" />
+  </sodipodi:namedview>
   <metadata
      id="metadata5">
     <rdf:RDF>
@@ -224,7 +241,7 @@ mpan (&lt;https://commons.wikimedia.org/wiki/User:Wikimpan&gt;; &lt;https://mpan
     <path
        id="path3970-6"
        style="fill:none;stroke:#000000;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:bevel;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1"
-       d="m 1163.5207,484.75215 v -10.5 l 7,-3.5 -14,-7 14,-7 -14,-7 14,-7 -14,-7 7,-3.5 v -10.5"
+       d="m 1072.0207,413.25215 h 10.5 l 3.5,7 7,-14 7,14 7,-14 7,14 7,-14 3.5,7 h 10.5"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccccccccc" />
     <circle
@@ -426,12 +443,12 @@ mpan (&lt;https://commons.wikimedia.org/wiki/User:Wikimpan&gt;; &lt;https://mpan
        style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <text
        xml:space="preserve"
-       transform="translate(-47.41242,-869.96881)"
+       transform="translate(-144.5501,-880.19383)"
        id="text1"
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect1);display:inline;fill:#000000;stroke:#66cb4d;stroke-width:2.78929;stroke-linejoin:round"><tspan
          x="1235.6699"
          y="1333.8635"
-         id="tspan3">550</tspan></text>
+         id="tspan1">550</tspan></text>
     <text
        xml:space="preserve"
        transform="translate(-343.5828,-960.28428)"
@@ -439,7 +456,7 @@ mpan (&lt;https://commons.wikimedia.org/wiki/User:Wikimpan&gt;; &lt;https://mpan
        style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:29.3333px;font-family:Arial;-inkscape-font-specification:'Arial, Normal';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;white-space:pre;shape-inside:url(#rect1-7);display:inline;fill:#000000;stroke:#66cb4d;stroke-width:2.78929;stroke-linejoin:round"><tspan
          x="1235.6699"
          y="1333.8635"
-         id="tspan4">550</tspan></text>
+         id="tspan2">550</tspan></text>
     <path
        inkscape:connector-curvature="0"
        id="path6723-7-8"
@@ -728,17 +745,17 @@ mpan (&lt;https://commons.wikimedia.org/wiki/User:Wikimpan&gt;; &lt;https://mpan
     <path
        inkscape:connector-curvature="0"
        id="path6729-7-3-0-2-5-0-6"
-       d="m 1109.9714,412.22364 h 15.75"
+       d="m 1163.5457,465.09935 v 15.75"
        style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <path
        inkscape:connector-curvature="0"
        id="path6729-7-3-5-3-8-0-2"
-       d="m 1091.1676,412.22364 h 15.75"
+       d="m 1163.5457,443.73929 v 15.75"
        style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <path
        inkscape:connector-curvature="0"
        id="path6729-7-3-4-1-4-4-3"
-       d="m 1072.3638,412.22364 h 15.75"
+       d="m 1163.4863,424.21362 v 15.75"
        style="fill:none;fill-opacity:1;fill-rule:nonzero;stroke:#000000;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1" />
     <path
        inkscape:connector-curvature="0"
