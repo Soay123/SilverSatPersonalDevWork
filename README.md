@@ -60,15 +60,22 @@ chmod +x ./this-file.py
 - ADS1015 provides only voltage information
 - Seems likely that the measured voltage must share the same ground as QWIIC VDD
 - Various Vin to VDD combinations can use the circuits described at the end of the document
+- A huge advantage of 12 rather than 16 bits is faster samples per second. 128 sps to 3300 sps depending on how the api constructor is invoked.
+- Accuracy is a function of heat
+- Gain = 2/3 = 6.144v max; Gain = 1 = 4.096v max
+- Max gain error of .04% occurs at 85 degrees celsius.
+- Differential offset error at 3v over entire operating tempeture range is about 3 uV
 
 2. Regarding the INA219
 
 - High Side (i.e. in series before load, rather than between load and ground).
-- Do not exceed 64 watts and 3.2 amps.
+- Do not exceed 64 watts and 3.2 amps. (as best I can tell)
 - Ground does NOT need to be shared between load and QWIIC VDD
-- 12 Bit ADC - Gain might need to be set
+- 12 Bit ADC - Gain might need to be set?
 - Put in the appropriate precautions if you are using an inductive load.
 - INA219 measures voltage and current (and therefore also power)
+- INA219 reports the average of 128 samples every 68.1 ms. (about 14 sps)
+- INA219 has an accuracy of .8 mA
 
 ## Some reasoning about the electronics needed
 
@@ -98,9 +105,11 @@ Read to the bottom
 
 4. If trying to measure above 3.6v, then some other means would be needed to step down the voltage.
 
-- At first a voltage divider might seem like a good choice
-  1. Voltage dividers are not a good choice because both legs share a common ground. Thus voltage varies like a circuit in parrell.
-  - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
+- At first a voltage divider might seem like a good choice (which it might be for AC)
+  1. Voltage dividers made of resistors are not a good choice if you need current.
+  - Both legs share a common ground. Thus voltage is calculated like a circuit in parrell. The only time this works is if you use impedance in the mega ohm range (either from a resistor or IC), but then you have almost no current.
+    - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
+  - This could also be solved by using a voltage divider composed of capacitors rather than resistors - but then you need AC.
 - Another way to do it would be to put diodes is series with the load.
   1. That will drop the voltage about .6 volts per diode. (3 diodes)
   2. In turn at least a 360 ohm load will be needed.
@@ -133,3 +142,5 @@ Vin---|360 Ohm|---|ADS1015|---Gnd
 ```
 Vin---|530 Ohm|---|ADS1015|---Gnd
 ```
+
+4. (Still to do) Using capacitors for voltage divider. Same formula as voltage divider using resistors, but not sure of uF.
