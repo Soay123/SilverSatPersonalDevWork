@@ -106,7 +106,7 @@ Read to the bottom
 
 4. If trying to measure above 3.6v, then some other means would be needed to step down the voltage.
 
-- At first a voltage divider might seem like a good choice; however:
+- A voltage divider which uses resistors requires a very high impedance resistor which results in a very small current.
 
   1. Lets look at the circuit using resistors. R1 and R3 are parrellel to each other, so R1's impedance (the load) needs to be in the mega ohm range (either from a resistor or IC), but then you have almost no current. (and that will not work for specs above)
 
@@ -117,64 +117,12 @@ Read to the bottom
               |--------|
   ```
 
-  2. Voltage dividers can be made of capacitors too; however,
-
-  ```
-  Convert DC to AC with an inverter - a 555 maybe.
-  Genralized Capacitivie Reactance formula in Ohm:
-  Xc = 1/(2πfC)
-  Xc = Capacitive Reactance in Ohms, (Ω)
-  π (pi) = a numeric constant of 3.142
-  ƒ = Frequency in Hertz, (Hz)
-  C = Capacitance in Farads, (F)
-
-  Calculate the Capacitive reactance (Ohm) of each capacitor using the formula above
-  X1 = 1/(2πfC1)
-  X2 = 1/(2πfC2)
-
-  Calculate the total:
-  Xt = X1 + X2
-  Current in the circuit:
-  I = Vin/Xt
-  Voltage over each capacitor:
-  I = V1/X1
-  I = V2/X2
-  Vin = V1 + V2
-
-  Voltage Divider: (X1 * X2)/(X1+X2)
-  Current is the same over entire circuit
-
-  Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
-
-  Next this creates a High Pass RC circuit with the load. But that just means that the voltage is not instantly high:
-  Next run the AC signal through a rectifier - this will be made of diodes and you will probably loose .6 volt so calculate that into your votage divider.
-
-  Vin----|C2|---|---|C3|--|
-                |         |
-                R1        |-Gnd
-                |---------|
-  ```
-
-  3. Version 2
-
-  ```
-  Vin----R2---|---|C3|--|
-              |         |
-              R1        |-Gnd
-              |---------|
-  ```
-
-  - Both legs share a common ground. Thus voltage is calculated like a circuit in parrell. The only time this works is if you use impedance in the mega ohm range (either from a resistor or IC), but then you have almost no current.
-    - This could be done with a 4700 Ohm, and 9100 Ohm; or 3 4700 Ohm for simplicity.
-  - This could also be solved by using a voltage divider composed of capacitors rather than resistors - but then you need AC.
-  - This could also be solved using a low pass
-    https://www.we-online.com/components/media/o790814v410%20ANP124_Capacitive_Power_Supply_EN.pdf
-
 - Another way to do it would be to put diodes is series with the load.
   1. That will drop the voltage about .6 volts per diode. (3 diodes)
   2. In turn at least a 360 ohm load will be needed.
   3. This is a constant offset
 - And finally another way is to use 5v for VDD, 530 Ohm resistor, with a 2/3 gain setting on the ADS1015
+- At the end of this readme I mention some really crazy ways to do it too.
 
 ## Varoius Circuits
 
@@ -203,4 +151,45 @@ Vin---|360 Ohm|---|ADS1015|---Gnd
 Vin---|530 Ohm|---|ADS1015|---Gnd
 ```
 
-4. (Still to do) Using capacitors for voltage divider. Same formula as voltage divider using resistors, but not sure of uF.
+4. Crazy footnotes
+
+- Voltage dividers can be made of capacitors too; however,
+
+```
+Convert DC to AC with an inverter - a 555 maybe.
+Genralized Capacitivie Reactance formula in Ohm:
+Xc = 1/(2πfC)
+Xc = Capacitive Reactance in Ohms, (Ω)
+π (pi) = a numeric constant of 3.142
+ƒ = Frequency in Hertz, (Hz) - as estabilished by the 555
+C = Capacitance in Farads, (F)
+
+Calculate the Capacitive reactance (Ohm) of each capacitor using the formula above
+X1 = 1/(2πfC1)
+X2 = 1/(2πfC2)
+
+Calculate the total:
+Xt = X1 + X2
+Current in the circuit:
+I = Vin/Xt
+Voltage over each capacitor:
+I = V1/X1
+I = V2/X2
+Vin = V1 + V2
+
+Voltage Divider: (X1 * X2)/(X1+X2)
+Current is the same over entire circuit
+
+Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
+
+Next run the output of the voltage divider through a rectifier. This will be made of diodes and you will probably loose .6 volt so calculate that into your votage divider.
+
+Then run the output of the rectifier into the sensor/load.
+
+Vin----|C2|---|---|C3|--|
+              |         |
+              Rec       |
+              |         |
+              R1        |-Gnd
+              |---------|
+```
