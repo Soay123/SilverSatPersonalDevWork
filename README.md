@@ -119,11 +119,36 @@ Read to the bottom
 
   2. Voltage dividers can be made of capacitors too; however,
 
-  - C3 and R1 are now in parrelll
-    https://cpb-us-e2.wpmucdn.com/sites.uci.edu/dist/b/1759/files/2017/12/Week1_VoltageDivider_Cap_RC.pdf
-    https://cpb-us-e2.wpmucdn.com/sites.uci.edu/dist/b/1759/files/2017/12/Week1_VoltageDivider_Cap_RC.pdf
-
   ```
+  Convert DC to AC with an inverter - a 555 maybe.
+  Genralized Capacitivie Reactance formula in Ohm:
+  Xc = 1/(2πfC)
+  Xc = Capacitive Reactance in Ohms, (Ω)
+  π (pi) = a numeric constant of 3.142
+  ƒ = Frequency in Hertz, (Hz)
+  C = Capacitance in Farads, (F)
+
+  Calculate the Capacitive reactance (Ohm) of each capacitor using the formula above
+  X1 = 1/(2πfC1)
+  X2 = 1/(2πfC2)
+
+  Calculate the total:
+  Xt = X1 + X2
+  Current in the circuit:
+  I = Vin/Xt
+  Voltage over each capacitor:
+  I = V1/X1
+  I = V2/X2
+  Vin = V1 + V2
+
+  Voltage Divider: (X1 * X2)/(X1+X2)
+  Current is the same over entire circuit
+
+  Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
+
+  Next this creates a High Pass RC circuit with the load. But that just means that the voltage is not instantly high:
+  Next run the AC signal through a rectifier - this will be made of diodes and you will probably loose .6 volt so calculate that into your votage divider.
+
   Vin----|C2|---|---|C3|--|
                 |         |
                 R1        |-Gnd
