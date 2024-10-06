@@ -188,6 +188,8 @@ Then run the output of the rectifier into the sensor/load.
 
 Big footnote: look at the inefficency of converting AC to DC first
 
+This picture is not quite right brcause a rectifier seperates the DC and AC circuits
+
 Vin----|C2|---|---|C3|--|
               |         |
               Rec       |
