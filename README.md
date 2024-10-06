@@ -122,7 +122,7 @@ Read to the bottom
   2. In turn at least a 360 ohm load will be needed.
   3. This is a constant offset
 - And finally another way is to use 5v for VDD, 530 Ohm resistor, with a 2/3 gain setting on the ADS1015
-- At the end of this readme I mention some really crazy ways to do it too.
+- At the end of this readme I mention a really crazy way to do it too.
 
 ## Varoius Circuits
 
@@ -153,7 +153,7 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
 
 4. Crazy footnotes
 
-- Voltage dividers can be made of capacitors too; however,
+- Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors; however,
 
 ```
 Convert DC to AC with an inverter - a 555 maybe.
@@ -182,9 +182,11 @@ Current is the same over entire circuit
 
 Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
 
-Next run the output of the voltage divider through a rectifier. This will be made of diodes and you will probably loose .6 volt so calculate that into your votage divider.
+Next run the output of the voltage divider through a diode bridge rectifier. This will be made of diodes and you will probably loose .6 volt so calculate that into your votage divider. If this was AC and you were not using a rectifier, then it would become a high pass filter.
 
 Then run the output of the rectifier into the sensor/load.
+
+Big footnote: look at the inefficency of converting AC to DC first
 
 Vin----|C2|---|---|C3|--|
               |         |
