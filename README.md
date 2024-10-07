@@ -78,6 +78,11 @@ chmod +x ./this-file.py
 - INA219 reports the average of 128 samples every 68.1 ms. (about 14 sps)
 - INA219 has an accuracy of .8 mA
 
+3. Regarding Vin of sample vs. VDD of QWIIC
+
+- As discussed below some type of circuit would be needed to step down the voltage, but not to regulate it to a fixed amout.
+- Easiest solution is probably to use diodes.
+
 ## Some reasoning about the electronics needed
 
 Read to the bottom
@@ -117,10 +122,10 @@ Read to the bottom
               |--------|
   ```
 
-- Another way to do it would be to put diodes in series to create a voltage divider.
+- Another way to do it would be to put diodes in series.
   1. That will drop the voltage about .6 volts per diode. (3 diodes)
-  2. In turn at least a 360 ohm load will be needed.
-  3. This is a constant offset
+  2. In turn at least a 530 ohm load will be needed.
+  3. The diodes provide a constant offset to the actual voltage
 - And finally another way is to use 5v for VDD, 530 Ohm resistor, with a 2/3 gain setting on the ADS1015
 - At the end of this readme I mention a really crazy way to do it too.
 
@@ -139,6 +144,12 @@ Vin--Resistor---|--Diode-Diode-Diode----|
 
 Vin---|>|---|>|---|>|------Load---Gnd
 
+Vin---R1--|----Z1---|
+          |         |-Gnd
+          |--Sensor-|
+          Where Z1 is a 3.3v zener diode
+          R1 = 530 at least
+          https://diyodemag.com/education/diode_zener_linear_ldo_voltage_regulators_explained
 ```
 
 2. To measure up to 3.6 volts with an ADS1015 at 3.3v VDD:
