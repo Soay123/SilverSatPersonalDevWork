@@ -177,16 +177,14 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
 
 4. Crazy footnotes
 
-- Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors; however,
+- Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors:
 
 ```
-
-Convert DC to AC with an inverter - a 555 maybe.
 Genralized Capacitivie Reactance formula in Ohm:
 Xc = 1/(2πfC)
 Xc = Capacitive Reactance in Ohms, (Ω)
 π (pi) = a numeric constant of 3.142
-ƒ = Frequency in Hertz, (Hz) - as estabilished by the 555
+ƒ = Frequency in Hertz, (Hz)
 C = Capacitance in Farads, (F)
 
 Calculate the Capacitive reactance (Ohm) of each capacitor using the formula above
@@ -198,35 +196,13 @@ Xt = X1 + X2
 Current in the circuit:
 I = Vin/Xt
 Voltage over each capacitor:
-I = V1/X1
-I = V2/X2
-Vin = V1 + V2
+V1 = I * X1
+V2 = I * X2
+Note: Vin = V1 + V2
 
 Voltage Divider: (X1 \* X2)/(X1+X2)
-Current is the same over entire circuit
-
-Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
-
-Next run the output of the voltage divider through a diode bridge rectifier. This will be made of diodes and you will probably loose .6 volt so calculate that into your votage divider. If this was AC and you were not using a rectifier, then it would become a high pass filter.
-
-Then run the output of the rectifier into the sensor/load.
-
-Big footnote: look at the inefficency of converting AC to DC first
-
-This picture is not quite right brcause a rectifier seperates the DC and AC circuits
-
-    |-------------------|
-    |                   |
-
-Vin----|C2|---|---|C3|--|
-| |
-|--------Rec-------|
-| |
-R1 |-Gnd
-|---------|
-
 ```
 
-```
-
-```
+- Current is the same over entire circuit
+- Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
+- Since this is ac, the 530 ohm resistom in front of a sensor, will probably end up like a high passs rc filter
