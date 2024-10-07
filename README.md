@@ -65,7 +65,7 @@ chmod +x ./this-file.py
 - Gain = 2/3 = 6.144v max; Gain = 1 = 4.096v max
 - Max gain error of .04% occurs at 85 degrees celsius.
 - Differential offset error at 3v over entire operating tempeture range is about 3 uV
-- Requires an input of at least 250 uA, .256v, means that at bottom of range R <=1024
+- Requires an input of at least 250 uA, .256v, means that at bottom of range R <=1024. So if you want to be able to sense the entire range with low power then the resistor should be between 530 and 1024 ohm. With more power the resistor should be between 530 and 13200 ohm.
 
 2. Regarding the INA219
 
@@ -133,17 +133,24 @@ Read to the bottom
 
 1. To measure 5.2 volts, with a ADS1015 at 3.3v VDD, at 10 mA:
 
-- Use a resistor with at least 360 Ohm impedance, and 3 diodes with a .6 to .7 voltage drop per diode (even more accurate is to use a zener diode rather than those three):
+- Use a resistor with at least 530 Ohm impedance, and 3 diodes with a .6 to .7 voltage drop per diode (even more accurate is to use a zener diode rather than those three):
+
+```
+Vin---|>|---|>|---|>|------Load---Gnd
+```
+
+- Tempting to use this circuit, but it acts as a voltage regulator
 
 ```
 Regulator. Vout is sum of voltage drop across diodes:
 Vin--Resistor---|--Diode-Diode-Diode----|
                 |                       |-Gnd
                 |-Vout------------------|
+```
 
+- Regulator. Much more precise because you can choose the exact zener diode needed.
 
-Vin---|>|---|>|---|>|------Load---Gnd
-
+```
 Vin---R1--|----Z1---|
           |         |-Gnd
           |--Sensor-|
