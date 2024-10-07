@@ -200,9 +200,9 @@ V1 = I * X1
 V2 = I * X2
 Note: Vin = V1 + V2
 
-Voltage Divider: (X1 \* X2)/(X1+X2)
+Voltage Divider: (X1 * X2)/(X1+X2)
 ```
 
 - Current is the same over entire circuit
 - Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
-- Since this is ac, the 530 ohm resistom in front of a sensor, will probably end up like a high passs rc filter
+- Since this is ac, the 530 ohm resistor in front of a sensor, will probably end up like a high passs rc filter
