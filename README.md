@@ -159,12 +159,6 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
 
 4. Crazy footnotes
 
-- Use a voltage regulator. The diodes are in parrellel rather than series with the load. Only question is does the voltage dip as expected?
-
-```
-Vin---|----|>|--|>|--
-      |
-
 - Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors; however,
 
 ```
@@ -212,6 +206,8 @@ Vin----|C2|---|---|C3|--|
 | |
 R1 |-Gnd
 |---------|
+
+```
 
 ```
 
