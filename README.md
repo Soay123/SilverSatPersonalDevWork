@@ -108,7 +108,7 @@ Read to the bottom
 
 - A voltage divider which uses resistors requires a very high impedance resistor which results in a very small current.
 
-  1. Lets look at the circuit using resistors. R1 and R3 are parrellel to each other, so R1's impedance (the load) needs to be in the mega ohm range (either from a resistor or IC), but then you have almost no current. (and that will not work for specs above)
+  1. Voltage divider using resistors. R1 and R3 are parrellel to each other (Thevinen equivilent), so R1's impedance (the load) needs to be in the mega ohm range (either from a resistor or IC) for the voltage out of the voltage divider be be accurate, but then you have almost no current. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor.
 
   ```
   Vin----R2---|---R3---|
@@ -117,7 +117,7 @@ Read to the bottom
               |--------|
   ```
 
-- Another way to do it would be to put diodes is series with the load.
+- Another way to do it would be to put diodes in series to create a voltage divider.
   1. That will drop the voltage about .6 volts per diode. (3 diodes)
   2. In turn at least a 360 ohm load will be needed.
   3. This is a constant offset
@@ -128,11 +128,17 @@ Read to the bottom
 
 1. To measure 5.2 volts, with a ADS1015 at 3.3v VDD, at 10 mA:
 
-- Use a resistor with at least 360 Ohm impedance, and 3 diodes with a .6 to .7 voltage drop per diode:
+- Use a resistor with at least 360 Ohm impedance, and 3 diodes with a .6 to .7 voltage drop per diode (even more accurate is to use a zener diode rather than those three):
 
 ```
-Vin--Diode-Diode-Diode---Resistor-----Load------Gnd
-Vin---|>|---|>|---|>|---|360 Ohm|---|ADS1015|---Gnd
+Regulator. Vout is sum of voltage drop across diodes:
+Vin--Resistor---|--Diode-Diode-Diode----|
+                |                       |-Gnd
+                |-Vout------------------|
+
+
+Vin---|>|---|>|---|>|------Load---Gnd
+
 ```
 
 2. To measure up to 3.6 volts with an ADS1015 at 3.3v VDD:
@@ -153,9 +159,16 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
 
 4. Crazy footnotes
 
+- Use a voltage regulator. The diodes are in parrellel rather than series with the load. Only question is does the voltage dip as expected?
+
+```
+Vin---|----|>|--|>|--
+      |
+
 - Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors; however,
 
 ```
+
 Convert DC to AC with an inverter - a 555 maybe.
 Genralized Capacitivie Reactance formula in Ohm:
 Xc = 1/(2πfC)
@@ -177,7 +190,7 @@ I = V1/X1
 I = V2/X2
 Vin = V1 + V2
 
-Voltage Divider: (X1 * X2)/(X1+X2)
+Voltage Divider: (X1 \* X2)/(X1+X2)
 Current is the same over entire circuit
 
 Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
@@ -192,10 +205,14 @@ This picture is not quite right brcause a rectifier seperates the DC and AC circ
 
     |-------------------|
     |                   |
+
 Vin----|C2|---|---|C3|--|
-     |        |
-     |--------Rec-------|
-              |         |
-              R1        |-Gnd
-              |---------|
+| |
+|--------Rec-------|
+| |
+R1 |-Gnd
+|---------|
+
+```
+
 ```
