@@ -108,14 +108,19 @@ class ina_object:
     shunt_voltage = self.ina.shunt_voltage
     # voltage on V+ (voltage source side)
     v_plus = bus_voltage + shunt_voltage
-    # current in mA
+    # current in mA - possible this is an int
     current = self.ina.current
     # Shunt current
-    shunt_current = current / 1000
+    shunt_current:float = current / 1000
     # Calculated power
     power_calc = bus_voltage * shunt_current
     # Does that mean I can calculate impedance too?
-    impedance_calc = bus_voltage / shunt_current
+    # Apparently not. Shut current is 0 sometimes
+    current_flt:float = self.ina.current
+    # If current is 0 then impedance is infinite, but we will just say 0
+    impedance_calc:float = 0
+    if current_flt != 0:
+      impedance_calc = bus_voltage / current_flt
     # power in watts from register
     power = self.ina.power
     time_in_ms_raw = int(time.time() * 1000) - self.start_time
