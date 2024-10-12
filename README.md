@@ -124,7 +124,8 @@ chmod +x ./this-file.py
   7. Solve for R1 and R2 when
 
   - Vin \* Rt/(R1 + Rt) = Vout
-  - ((Vout + .3)/.01) < R3 < 13200
+  - R3 > ((Vout + .3)/.01)
+  - R1 + R3 < 13200
   - Vin = 5, and Vout = 3.3
 
 ```
@@ -142,8 +143,9 @@ Gnd---|---------------|
 1. That will drop the voltage about .6 volts per diode. (3 diodes)
 2. Resistor values:
 
-- At least a 530 ohm load will be needed, given a VDD of 5v, and a Vin which is not greater than 5.3v, and 5.3/.01 is minimum resistor value.
-- At least a 360 ohm load will be needed, given a VDD of 3.3v, and a Vin which is not greater than 3.6v, and 3.6/.01 is minimum resistor value.
+- 5.3 Vin - 3.6 Vout = 1.7v
+- 1.7 div .6, +1 if 1.7 mod 6 != 0 thus 3 to 4 diodes (1.8 - 2.8 voltage drop)
+- At least a 360 ohm load will be needed, given a Vout of 3.3v (3.6/.01 is minimum resistor value)
 
 3. The diodes provide a constant offset to the actual voltage
 
@@ -159,7 +161,6 @@ Vin---|>|---|>|---|>|---R1---Sensor---Gnd
 ## Varoius Circuits
 
 1. A level shifter using diodes seems the easiest to calculate.
-
 2. To measure up to 3.6 volts with an ADS1015 at 3.3v VDD:
 
 - Use a resistor with at least 360 Ohm impedance, and use a circuit like:
@@ -182,9 +183,10 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
 
 4. Crazy footnotes About Level Shifting
 
-- Voltage dividers can be made of capacitors too. (Current is the same over all of the capacitors but voltage is different)
+- Voltage dividers can be made of capacitors too. (Current is the same over all of the capacitors but voltage is different per capacitor)
+- Using capacitors is more energy efficient, produces less heat, and is more accrute; however it is more sensitive to tempeture fluctions.
 - Capacitors prevent the flow of DC current.
-- Capacitors in a voltage divider do not have a specific frequency as in an RC circuit.
+- Capacitors in a voltage divider do not have a specific frequency as in an RC circuit; however, the frequency affects the current.
 
   1. Genralized Capacitivie Reactance formula in Ohm:
 
@@ -205,13 +207,13 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
   - Current in the circuit:
     1. I = Vin/Xt
     2. Voltage over each capacitor:
-    - V1 = I \_ X1
-    - V2 = I \_ X2
+    - V1 = I \* X1
+    - V2 = I \* X2
     - Note: Vin = V1 + V2
 
   4. Voltage at Vout
 
-  - Voltage Divider: (X1 \* X2)/(X1+X2)
+  - Voltage Divider: Vout = Vin \* (C1/(C1+C2)
   - Current is the same over entire circuit
   - Since I is the same, be sure to take that into account so that you do not exceed 10 mA
 
