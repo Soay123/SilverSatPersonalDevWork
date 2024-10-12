@@ -85,14 +85,14 @@ chmod +x ./this-file.py
 
 ## Some reasoning about the electronics needed
 
-Read to the bottom
+- Constraints (Read to the bottom)
 
 1. A quarter watt resistor at 5 volts must have a resistance of at least 100 ohm
 2. Based on GPIO limitations per pin:
 
 - 50 mA total for all of the GPIO pins, and .017 amps at 3.3v max for one:
 - 3.3v \* .017 amps = .0561 watts max per pin max.
-  1. So min Resistance equals about 200 ohm for Pi; however,
+  1. So min Resistance equals about 200 ohm (3.3/.017) for Pi; however,
   2. ADS1015 is only rated to 10 mA. So (3.3 + .3)/.01 = 360 Ohm at least
 - If the same wattage extends to 5v then:
 - 5v \* .01122 amps =.0561 watts.
@@ -108,121 +108,126 @@ Read to the bottom
   - Thus 3.3 volts. (So 3.6 volts max)
   - `3.6/0.010` = `R` = `360 Ohm`
   4. If 5v used for VDD, and 5.3v max, then you actually need at least a 530 ohm resistor
+  5. The ADS1015 requires at least some current from Vin = 3.3/13200 = min current = .25 mA
 
-4. If trying to measure above 3.6v, then some other means would be needed to step down the voltage.
+4. If trying to measure above 3.6v, then some other means would be needed to step down the voltage. Aka. a level shifter.
 
-- A voltage divider which uses resistors requires a very high impedance resistor which results in a very small current.
+- A voltage divider made using resistors (Current is different over each resistor, but voltage is the same)
 
-  1. Voltage divider using resistors. R1 and R3 are parrellel to each other (Thevinen equivilent), so R1's impedance (the load) needs to be in the mega ohm range (either from a resistor or IC) for the voltage out of the voltage divider be be accurate, but then you have almost no current. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor.
-  2. R2+R3 < 13200 ohm
+  1. R1 and R2 create a theroetical voltage divider; however,
+  2. Once R3 is added, R2 and R3 are in paralel.
+  3. In order to keep the ratio correct, R3 will need to be very large.
+  4. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor. 530 < R3 < 13200 ohm
+  5. Parallel circuit Rt = ((1/R2)+(1/R3)); Vout of voltage divider: Vin \* R2/(R1 + R2) = 3.3 (When R3 is infinite)
+  6. Solve for R1 and R2 when
 
-  ```
-  Vin----R2---|---R3---|
-              |        |
-              R1       |-Gnd
-              |--------|
-  ```
+  - Vin \* Rt/(R1 + Rt) = Vout
+  - ((Vout + .3)/.01) < R3 < 13200
+  - Vin = 5, and Vout = 3.3
 
-- Another way to do it would be to put diodes in series.
-  1. That will drop the voltage about .6 volts per diode. (3 diodes)
-  2. In turn at least a 530 ohm load will be needed.
-  3. The diodes provide a constant offset to the actual voltage
+```
+
+Vin---|
+R1
+|--R3--Sensor---|
+R2 |
+Gnd---|---------------|
+
+```
+
+- A level shifter using diodes in series with the load.
+
+1. That will drop the voltage about .6 volts per diode. (3 diodes)
+2. Resistor values:
+
+- At least a 530 ohm load will be needed, given a VDD of 5v, and a Vin which is not greater than 5.3v, and 5.3/.01 is minimum resistor value.
+- At least a 360 ohm load will be needed, given a VDD of 3.3v, and a Vin which is not greater than 3.6v, and 3.6/.01 is minimum resistor value.
+
+3. The diodes provide a constant offset to the actual voltage
+
+```
+
+Vin---|>|---|>|---|>|---R1---Sensor---Gnd
+
+```
+
 - And finally another way is to use 5v for VDD, 530 Ohm resistor, with a 2/3 gain setting on the ADS1015
-- At the end of this readme I mention a really crazy way to do it too.
+- At the end of this readme I mention two other ways to do this too.
 
 ## Varoius Circuits
 
-1. To measure 5.2 volts, with a ADS1015 at 3.3v VDD, at 10 mA:
-
-- Use a resistor with at least 530 Ohm impedance, and 3 diodes with a .6 to .7 voltage drop per diode (even more accurate is to use a zener diode rather than those three):
-
-```
-Vin---|>|---|>|---|>|------Load---Gnd
-```
-
-- Tempting to use this circuit, but it acts as a voltage regulator
-
-```
-Regulator. Vout is sum of voltage drop across diodes:
-Vin--Resistor---|--Diode-Diode-Diode----|
-                |                       |-Gnd
-                |-Vout------------------|
-```
-
-- Regulator. Much more precise because you can choose the exact zener diode needed.
-
-```
-Vin---R1--|----Z1---|
-          |         |-Gnd
-          |--Sensor-|
-          Where Z1 is a 3.3v zener diode
-          R1 = 530 at least
-          https://diyodemag.com/education/diode_zener_linear_ldo_voltage_regulators_explained
-```
+1. A level shifter using diodes seems the easiest to calculate.
 
 2. To measure up to 3.6 volts with an ADS1015 at 3.3v VDD:
 
 - Use a resistor with at least 360 Ohm impedance, and use a circuit like:
 
 ```
+
 Vin---|360 Ohm|---|ADS1015|---Gnd
+
 ```
 
-3. To measure 5.2 volts, with a ADS1015 at 5v VDD, 10 mA max:
+3. To measure up to 5.3 volts, with a ADS1015 at 5v VDD, 10 mA max:
 
 - Set gain to 2/3, use a resistor with at least 530 Ohm impedance, and use a circuit like:
 
 ```
+
 Vin---|530 Ohm|---|ADS1015|---Gnd
+
 ```
 
 4. Crazy footnotes About Level Shifting
 
-- Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors.
+- Voltage dividers can be made of capacitors too. (Current is the same over all of the capacitors but voltage is different)
+- Capacitors prevent the flow of DC current.
+- Capacitors in a voltage divider do not have a specific frequency as in an RC circuit.
 
-```
-Genralized Capacitivie Reactance formula in Ohm:
-Xc = 1/(2πfC)
-Xc = Capacitive Reactance in Ohms, (Ω)
-π (pi) = a numeric constant of 3.142
-ƒ = Frequency in Hertz, (Hz)
-C = Capacitance in Farads, (F)
+  1. Genralized Capacitivie Reactance formula in Ohm:
 
-Calculate the Capacitive reactance (Ohm) of each capacitor using the formula above
-X1 = 1/(2πfC1)
-X2 = 1/(2πfC2)
+  - Xc = 1/(2πfC)
+  - Xc = Capacitive Reactance in Ohms, (Ω)
+  - π (pi) = a numeric constant of 3.142
+  - ƒ = Frequency in Hertz, (Hz)
+  - C = Capacitance in Farads, (F)
 
-Calculate the total:
-Xt = X1 + X2
-Current in the circuit:
-I = Vin/Xt
-Voltage over each capacitor:
-V1 = I * X1
-V2 = I * X2
-Note: Vin = V1 + V2
+  2. Calculate the Capacitive reactance (Ohm) of each capacitor using the formula above
 
-Voltage Divider: (X1 * X2)/(X1+X2)
-```
+  - X1 = 1/(2πfC1)
+  - X2 = 1/(2πfC2)
 
+  3. Calculate the total:
+
+  - Xt = X1 + X2
+  - Current in the circuit:
+    1. I = Vin/Xt
+    2. Voltage over each capacitor:
+    - V1 = I \_ X1
+    - V2 = I \_ X2
+    - Note: Vin = V1 + V2
+
+- Voltage Divider: (X1 \* X2)/(X1+X2)
 - Current is the same over entire circuit
-- Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
-- Since the voltage divider is made of just capacitors, the voltage divider does not need to be tuned to a specific frequency.
+- Since I is the same, be sure to take that into account so that you do not exceed 10 mA
 
 ```
+
 Vin----|------|--Cs1--|
-       C1     |       |
-       |      R1      |
-       Rd1    |       |
+C1 | |
+| R1 |
+Rd1 | |
 Vout---|------|--Cs2--|
-       C2     |       |
-       |      R2      |
-       Rd2    |       |
+C2 | |
+| R2 |
+Rd2 | |
 Gnd----|------|-------|
 
 Cs1, Cs2 are for stray capacitance
 C1, C2 for capacitive voltage divider for AC
 Rd1, Rd2 for damping (minimizes osilation and prevents voltage spikes)
 R1, R2 voltage divider resistors for DC voltage
+
 ```
 
 - When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
@@ -230,10 +235,16 @@ R1, R2 voltage divider resistors for DC voltage
 - Once you have the combined resistance, you can use the time constant formula (τ = RC) to find the capacitor value needed to achieve the desired time constant.
 
 ```
+
 Example:
 Problem:
 You want to design a circuit with a time constant of 10 milliseconds. The damping resistor has a resistance of 10 ohms, and the shunt resistor has a resistance of 100 ohms. What capacitor value is needed?
 Solution:
 Calculate the combined resistance: 1 / (1/10 + 1/100) = 9 ohms
 Calculate the capacitor value: C = τ / R = 0.01 seconds / 9 ohms = 0.0011 Farads (or 1.1 millifarads)
+
+```
+
+```
+
 ```
