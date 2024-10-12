@@ -118,9 +118,10 @@ chmod +x ./this-file.py
   1. R1 and R2 create a theroetical voltage divider; however,
   2. Once R3 is added, R2 and R3 are in paralel.
   3. In order to keep the ratio correct, R3 will need to be very large.
-  4. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor. 530 < R3 < 13200 ohm
-  5. Parallel circuit Rt = ((1/R2)+(1/R3)); Vout of voltage divider: Vin \* R2/(R1 + R2) = 3.3 (When R3 is infinite)
-  6. Solve for R1 and R2 when
+  4. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor. 360 < R3 < 13200 ohm
+  5. Parallel circuit Rt = ((1/R2)+(1/R3))
+  6. Vout of voltage divider: Vin \* R2/(R1 + R2) = 3.3 (When R3 is infinite)
+  7. Solve for R1 and R2 when
 
   - Vin \* Rt/(R1 + Rt) = Vout
   - ((Vout + .3)/.01) < R3 < 13200
@@ -129,9 +130,9 @@ chmod +x ./this-file.py
 ```
 
 Vin---|
-R1
-|--R3--Sensor---|
-R2 |
+      R1
+      |--R3--Sensor---|
+      R2              |
 Gnd---|---------------|
 
 ```
