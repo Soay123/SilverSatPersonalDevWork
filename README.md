@@ -7,27 +7,32 @@ Work related to the Silver Sat team
 ## Prepare Raspberry Pi:
 
 ```
-apt install python
+# With the monitor and power unplugged from the Pi install the QWIIC shim
+# sudo raspi-config
+# Select Interfacing Options
+# Select 'Yes' that I2C kernel module should be enabled
+# Then Finish and reboot (shutdown -r now)
+apt install python3
 apt install git
 git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
 git config --global init.defaultBranch main
 mkdir ~/.ssh
 cd ~/.ssh
-ssk-keygen -t ed25519
+ssh-keygen -t ed25519
 chmod 700 ~/.ssh
 chmod 644 ~/.ssh/id_ed25519.pub
 chmod 600 ~/.ssh/id_ed25519
 
 <log into github and add public key>
 
-pip3 install --upgrade pip
-python3 -m venv /path/to/new/virtual/environment
-/path/to/new/virtual/environment/bin/pip3 install Adafruit-Blinka
-/path/to/new/virtual/environment/bin/pip3 install adafruit-circuitpython-ads1x15
-/path/to/new/virtual/environment/bin/pip3 install adafruit-circuitpython-ina219
-mkdir ~/code
-cd ~/code
+python3 -m venv /home/me/Desktop/venv
+/home/me/Desktop/venv/pip3 install --upgrade pip
+/home/me/Desktop/venv/bin/pip3 install Adafruit-Blinka
+/home/me/Desktop/venv/bin/pip3 install adafruit-circuitpython-ads1x15
+/home/me/Desktop/venv/bin/pip3 install adafruit-circuitpython-ina219
+mkdir /home/me/Desktop/code
+cd /home/me/Desktop/code
 git clone <whatever the git path to your repo is>
 cd repo-name
 
@@ -116,7 +121,7 @@ chmod +x ./this-file.py
 - A voltage divider made using resistors (Current is different over each resistor, but voltage is the same)
 
   1. R1 and R2 create a theroetical voltage divider; however,
-  2. Once R3 is added, R2 and R3 are in paralel.
+  2. Once R3 is added, R2 and R3 are in paralel and the circuit is "loaded"
   3. In order to keep the ratio correct, R3 will need to be very large.
   4. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor. 360 < R3 < 13200 ohm
   5. Parallel circuit Rt = ((1/R2)+(1/R3))
@@ -213,40 +218,38 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
 
   4. Voltage at Vout
 
+  - Vout = Vin \* 1/C2 / (1/C1 + 1/C2)
+
   - Voltage Divider: Vout = Vin \* (C1/(C1+C2)
   - Current is the same over entire circuit
   - Since I is the same, be sure to take that into account so that you do not exceed 10 mA
 
 ```
 
-Vin----|------|--Cs1--|
-C1 | |
-| R1 |
-Rd1 | |
-Vout---|------|--Cs2--|
-C2 | |
-| R2 |
-Rd2 | |
-Gnd----|------|-------|
+Vin---|
+      C1
+Vout--|
+      C2
+Gnd---|
 ```
 
 5. A hybrid
 
 ```
 
-Vin----|------|--Cs1--|
-C1 | |
-| R1 |
-Rd1 | |
-Vout---|------|--Cs2--|
-C2 | |
-| R2 |
-Rd2 | |
-Gnd----|------|-------|
+Vin---|---|--Cs1--|
+      C1  |       |
+      |   R1      |
+      Rd1 |       |
+Vout--|---|--Cs2--|
+      C2  |       |
+      |   R2      |
+      Rd2 |       |
+Gnd---|---|-------|
 ```
 
 - Diagram Notes
-  1. Cs1, Cs2 are for stray capacitance
+  1. Cs1 = Cs2 = tiny pF are for stray capacitance
   2. C1, C2 for capacitive voltage divider for AC
   3. Rd1, Rd2 for damping (minimizes osilation and prevents voltage spikes)
   4. R1, R2 voltage divider resistors for DC voltage
