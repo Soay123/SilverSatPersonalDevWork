@@ -90,14 +90,15 @@ chmod +x ./this-file.py
 1. A quarter watt resistor at 5 volts must have a resistance of at least 100 ohm
 2. Based on GPIO limitations per pin:
 
-- 50 mA total for all of the GPIO pins, and .017 amps at 3.3v max for one:
-- 3.3v \* .017 amps = .0561 watts max per pin max.
-  1. So min Resistance equals about 200 ohm (3.3/.017) for Pi; however,
-  2. ADS1015 is only rated to 10 mA. So (3.3 + .3)/.01 = 360 Ohm at least
-- If the same wattage extends to 5v then:
-- 5v \* .01122 amps =.0561 watts.
-  1. So min Resistance equals about 450 ohm for Pi; however,
-  2. ADS1015 is only rated to 10 mA. So (5 + .3)/.01 = 530 Ohm at least
+- 50 mA total for all of the GPIO pins, and 17 mA at 3.3v max for one:
+- 50 mA / 40 pins = 1.25 mA per pin normally.
+- 3.3v \* 17mA = .0561 watts Vout max for a single pin.
+  1. So min load at max current is about 200 ohm (3.3/.017) for Pi; however,
+  2. ADS1015 is only rated to 10 mA. So min load = (3.3 + .3)/.01 = 360 Ohm
+  - If the same wattage extends to 5v then:
+  - 5v \* .01122 amps =.0561 watts.
+    1. So min Resistance equals about 450 ohm for Pi; however,
+    2. ADS1015 is only rated to 10 mA. So (5 + .3)/.01 = 530 Ohm at least
 
 3. From the ADS1015 Datasheet:
 
@@ -207,9 +208,11 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
     - V2 = I \_ X2
     - Note: Vin = V1 + V2
 
-- Voltage Divider: (X1 \* X2)/(X1+X2)
-- Current is the same over entire circuit
-- Since I is the same, be sure to take that into account so that you do not exceed 10 mA
+  4. Voltage at Vout
+
+  - Voltage Divider: (X1 \* X2)/(X1+X2)
+  - Current is the same over entire circuit
+  - Since I is the same, be sure to take that into account so that you do not exceed 10 mA
 
 ```
 
@@ -222,29 +225,36 @@ C2 | |
 | R2 |
 Rd2 | |
 Gnd----|------|-------|
+```
 
-Cs1, Cs2 are for stray capacitance
-C1, C2 for capacitive voltage divider for AC
-Rd1, Rd2 for damping (minimizes osilation and prevents voltage spikes)
-R1, R2 voltage divider resistors for DC voltage
+5. A hybrid
 
 ```
 
-- When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
-- Since the damping resistor and the shunt resistor are in parallel, their combined resistance is calculated using the formula: 1/(1/R_damping + 1/R_shunt)
-- Once you have the combined resistance, you can use the time constant formula (τ = RC) to find the capacitor value needed to achieve the desired time constant.
-
+Vin----|------|--Cs1--|
+C1 | |
+| R1 |
+Rd1 | |
+Vout---|------|--Cs2--|
+C2 | |
+| R2 |
+Rd2 | |
+Gnd----|------|-------|
 ```
 
-Example:
-Problem:
-You want to design a circuit with a time constant of 10 milliseconds. The damping resistor has a resistance of 10 ohms, and the shunt resistor has a resistance of 100 ohms. What capacitor value is needed?
-Solution:
-Calculate the combined resistance: 1 / (1/10 + 1/100) = 9 ohms
-Calculate the capacitor value: C = τ / R = 0.01 seconds / 9 ohms = 0.0011 Farads (or 1.1 millifarads)
+- Diagram Notes
+  1. Cs1, Cs2 are for stray capacitance
+  2. C1, C2 for capacitive voltage divider for AC
+  3. Rd1, Rd2 for damping (minimizes osilation and prevents voltage spikes)
+  4. R1, R2 voltage divider resistors for DC voltage
+- Electrical Notes
 
-```
+1. When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
+2. Since the damping resistor and the shunt resistor are in parallel, their combined resistance is calculated using the formula: 1/(1/R_damping + 1/R_shunt)
+3. Once you have the combined resistance, you can use the time constant formula (τ = RC) to find the capacitor value needed to achieve the desired time constant.
 
-```
-
-```
+- Example problem:
+  1. You want to design a circuit with a time constant of 10 milliseconds. The damping resistor has a resistance of 10 ohms, and the shunt resistor has a resistance of 100 ohms. What capacitor value is needed?
+- Solution:
+  1. Calculate the combined resistance: 1 / (1/10 + 1/100) = 9 ohms
+  2. Calculate the capacitor value: C = τ / R = 0.01 seconds / 9 ohms = 0.0011 Farads (or 1.1 millifarads)
