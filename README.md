@@ -114,6 +114,7 @@ Read to the bottom
 - A voltage divider which uses resistors requires a very high impedance resistor which results in a very small current.
 
   1. Voltage divider using resistors. R1 and R3 are parrellel to each other (Thevinen equivilent), so R1's impedance (the load) needs to be in the mega ohm range (either from a resistor or IC) for the voltage out of the voltage divider be be accurate, but then you have almost no current. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor.
+  2. R2+R3 < 13200 ohm
 
   ```
   Vin----R2---|---R3---|
@@ -175,9 +176,9 @@ Vin---|360 Ohm|---|ADS1015|---Gnd
 Vin---|530 Ohm|---|ADS1015|---Gnd
 ```
 
-4. Crazy footnotes
+4. Crazy footnotes About Level Shifting
 
-- Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors:
+- Voltage dividers can be made of capacitors too. This is great if you have AC input and AC sensors.
 
 ```
 Genralized Capacitivie Reactance formula in Ohm:
@@ -205,4 +206,34 @@ Voltage Divider: (X1 * X2)/(X1+X2)
 
 - Current is the same over entire circuit
 - Since I is the same, be sure to take that into account so that you do not exceed down stream device limits.
-- Since this is ac, the 530 ohm resistor in front of a sensor, will probably end up like a high passs rc filter
+- Since the voltage divider is made of just capacitors, the voltage divider does not need to be tuned to a specific frequency.
+
+```
+Vin----|------|--Cs1--|
+       C1     |       |
+       |      R1      |
+       Rd1    |       |
+Vout---|------|--Cs2--|
+       C2     |       |
+       |      R2      |
+       Rd2    |       |
+Gnd----|------|-------|
+
+Cs1, Cs2 are for stray capacitance
+C1, C2 for capacitive voltage divider for AC
+Rd1, Rd2 for damping (minimizes osilation and prevents voltage spikes)
+R1, R2 voltage divider resistors for DC voltage
+```
+
+- When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
+- Since the damping resistor and the shunt resistor are in parallel, their combined resistance is calculated using the formula: 1/(1/R_damping + 1/R_shunt)
+- Once you have the combined resistance, you can use the time constant formula (τ = RC) to find the capacitor value needed to achieve the desired time constant.
+
+```
+Example:
+Problem:
+You want to design a circuit with a time constant of 10 milliseconds. The damping resistor has a resistance of 10 ohms, and the shunt resistor has a resistance of 100 ohms. What capacitor value is needed?
+Solution:
+Calculate the combined resistance: 1 / (1/10 + 1/100) = 9 ohms
+Calculate the capacitor value: C = τ / R = 0.01 seconds / 9 ohms = 0.0011 Farads (or 1.1 millifarads)
+```
