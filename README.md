@@ -257,12 +257,15 @@ Gnd---|---|-------|
   1. Cs1 = Cs2 = tiny pF are for stray capacitance
   2. C1, C2 for capacitive voltage divider for AC
   3. Rd1, Rd2 for damping (minimizes oscillation, such as voltage spikes, by reducing amplitude and frequency)
+  4. R1 and R2 are the DC voltage divider resistors
 
   - This probably means that the following constraints need to be calcultated:
-    1. Resistors only voltage divider
-    2. Capacitors + dampening resistors where impedance of (C1 + Rd1) = R1; and (C2 + Rd2) = R2
-    3. And if the time constant (τ = RC) needs to be maintained then C1 \* Rd1 = C2 \* Rd2
+    1. Voltage divider composed of resistors Vin=5, Vout=3.3
+    2. Capacitive reactance + dampening resistors impedance where (Xc1 + Rd1) = R1; and (Xc2 + Rd2) = R2
+    3. And the time constant (τ = RC) needs to be maintained so C1 \* Rd1 = C2 \* Rd2
 
-  4. R1, R2 voltage divider resistors for DC voltage
-
-  [Balancing Super Capacitors](https://www.we-online.com/catalog/media/o671684v410%20ANP090a_EN.pdf)
+- To Do
+  1. This still doesn't cover the effect of loading. Basically set the impedance on the Vout branch as high as possible (13200) and that controls your acceptable deviation from the ideal voltage divider.
+  2. How to limit I on Vout without affecting Vout voltage. If V = I\*R then if I is decreased, then R must be increased.
+- Referance
+  1. [Balancing Super Capacitors](https://www.we-online.com/catalog/media/o671684v410%20ANP090a_EN.pdf)

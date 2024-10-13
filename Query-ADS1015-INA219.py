@@ -18,7 +18,7 @@ class find_unique_filename:
     self.temp_path = ""
     self.file_increment = 0
     self.suffix=suffix
-    if self.base_path is "" or self.base_path is None or not os.path.isdir(self.base_path):
+    if self.base_path == "" or self.base_path == None or not os.path.isdir(self.base_path):
       self.base_path = f"{os.getcwd()}"
     # For some reason os.pathsep was a :
     pathsep = "/"
@@ -131,7 +131,7 @@ class ina_object:
     if self.ina.overflow:
       print("Internal Math Overflow Detected (non ADC) 3.2 Amps exceeded!")
     else:
-      self.out = f"{time_in_ms},{bus_voltage},{shunt_voltage},{v_plus},{current},{power_calc},{power},{impedance_calc}"
+      self.out = f"{time_in_ms:d},{bus_voltage:5.5f},{shunt_voltage:5.5f},{v_plus:5.5f},{current:5.5f},{power_calc:5.5f},{power:5.5f},{impedance_calc:5.5f}"
   def display_on_screen(self):
     print(f"{self.out}")
   def get_next_sample(self):
@@ -176,7 +176,7 @@ for address in ina_addresses:
   except Exception as err:
     print(f"Unexpected {err=}, {type(err)=}")
 
-while len(object_array) is not 0:
+while len(object_array) != 0:
   for item in object_array:
     item.get_next_sample()
   time.sleep(0.25)
