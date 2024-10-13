@@ -257,7 +257,7 @@ Gnd---|---|-------|
   2. C1, C2 for capacitive voltage divider for AC
   3. Rd1, Rd2 for damping (minimizes oscillation, such as voltage spikes, by reducing amplitude and frequency)
   - This probably means that the following constraints need to be calcultated:
-    1. Resistors only
+    1. Resistors only voltage divider
     2. Capacitors + dampening resistors where impedance of (C1 + Rd1) = R1; and (C2 + Rd2) = R2
     3. And if the time constant needs to be maintained then C1 \* Rd1 = C2 \* Rd2
   4. R1, R2 voltage divider resistors for DC voltage
