@@ -255,7 +255,7 @@ Gnd---|---|-------|
 - Diagram Notes
   1. Cs1 = Cs2 = tiny pF are for stray capacitance
   2. C1, C2 for capacitive voltage divider for AC
-  3. Rd1, Rd2 for damping (minimizes osilation and prevents voltage spikes)
+  3. Rd1, Rd2 for damping (minimizes oscillation, such as voltage spikes, by reducing amplitude and frequency)
   4. R1, R2 voltage divider resistors for DC voltage
 - Electrical Notes
   1. When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
@@ -264,5 +264,8 @@ Gnd---|---|-------|
 - Example problem:
   1. You want to design a circuit with a time constant of 10 milliseconds. The damping resistor has a resistance of 10 ohms, and the shunt resistor has a resistance of 100 ohms. What capacitor value is needed?
 - Solution:
+
   1. Calculate the combined resistance: 1 / (1/10 + 1/100) = 9 ohms
   2. Calculate the capacitor value: C = τ / R = 0.01 seconds / 9 ohms = 0.0011 Farads (or 1.1 millifarads)
+
+  [Balancing Super Capacitors](https://www.we-online.com/catalog/media/o671684v410%20ANP090a_EN.pdf)
