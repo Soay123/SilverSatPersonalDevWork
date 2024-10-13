@@ -118,12 +118,19 @@ chmod +x ./this-file.py
 
 4. If trying to measure above 3.6v, then some other means would be needed to step down the voltage. Aka. a level shifter.
 
-- A voltage divider made using resistors (Current is different over each resistor, but voltage is the same)
+- A voltage divider made using resistors
 
   1. R1 and R2 create a theroetical voltage divider; however,
   2. Once R3 is added, R2 and R3 are in paralel and the circuit is "loaded"
-  3. In order to keep the ratio correct, R3 will need to be very large.
-  4. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor. 360 < R3 < 13200 ohm
+
+  - From wikipedia "To obtain a sufficiently stable output voltage, the output current must either be stable (and so be made part of the calculation of the potential divider values) or limited to an appropriately small percentage of the divider's input current."
+
+  3. Example: In order to keep the ratio correct, R3 will need to be VERY large.
+  4. Per the specs at 3.3v you cannot have more than 13200 ohm impedance and remain within the operating range of the sensor.
+
+  - R3 > 3.6v/10mA
+  - R3 < 3.3v/.25mA
+
   5. Parallel circuit Rt = ((1/R2)+(1/R3))
   6. Vout of voltage divider: Vin \* R2/(R1 + R2) = 3.3 (When R3 is infinite)
   7. Solve for R1 and R2 when
@@ -216,13 +223,10 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
     - V2 = I \* X2
     - Note: Vin = V1 + V2
 
-  4. Voltage at Vout
+  4. Voltage at Vout can be calculated with the same formula as with resistors, or
 
-  - Vout = Vin \* 1/C2 / (1/C1 + 1/C2)
-
-  - Voltage Divider: Vout = Vin \* (C1/(C1+C2)
-  - Current is the same over entire circuit
-  - Since I is the same, be sure to take that into account so that you do not exceed 10 mA
+  - Vout = Vin \* C1 / (C1 + C2)
+  - Current is based on frequency. Take that into account so that you do not exceed 10 mA
 
 ```
 
@@ -254,11 +258,9 @@ Gnd---|---|-------|
   3. Rd1, Rd2 for damping (minimizes osilation and prevents voltage spikes)
   4. R1, R2 voltage divider resistors for DC voltage
 - Electrical Notes
-
-1. When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
-2. Since the damping resistor and the shunt resistor are in parallel, their combined resistance is calculated using the formula: 1/(1/R_damping + 1/R_shunt)
-3. Once you have the combined resistance, you can use the time constant formula (τ = RC) to find the capacitor value needed to achieve the desired time constant.
-
+  1. When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
+  2. Since the damping resistor and the shunt resistor are in parallel, their combined resistance is calculated using the formula: 1/(1/R_damping + 1/R_shunt)
+  3. Once you have the combined resistance, you can use the time constant formula (τ = RC) to find the capacitor value needed to achieve the desired time constant.
 - Example problem:
   1. You want to design a circuit with a time constant of 10 milliseconds. The damping resistor has a resistance of 10 ohms, and the shunt resistor has a resistance of 100 ohms. What capacitor value is needed?
 - Solution:
