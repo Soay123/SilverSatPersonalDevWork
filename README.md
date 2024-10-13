@@ -131,7 +131,7 @@ chmod +x ./this-file.py
   - R3 > 3.6v/10mA
   - R3 < 3.3v/.25mA
 
-  5. Parallel circuit Rt = ((1/R2)+(1/R3))
+  5. Parallel circuit Rt = 1/((1/R2)+(1/R3))
   6. Vout of voltage divider: Vin \* R2/(R1 + R2) = 3.3 (When R3 is infinite)
   7. Solve for R1 and R2 when
 
@@ -256,6 +256,10 @@ Gnd---|---|-------|
   1. Cs1 = Cs2 = tiny pF are for stray capacitance
   2. C1, C2 for capacitive voltage divider for AC
   3. Rd1, Rd2 for damping (minimizes oscillation, such as voltage spikes, by reducing amplitude and frequency)
+  - This probably means that the following constraints need to be calcultated:
+    1. Resistors only
+    2. Capacitors + dampening resistors where impedance of (C1 + Rd1) = R1; and (C2 + Rd2) = R2
+    3. And if the time constant needs to be maintained then C1 \* Rd1 = C2 \* Rd2
   4. R1, R2 voltage divider resistors for DC voltage
 - Electrical Notes
   1. When a capacitor and resistor are placed in parallel, they share the same voltage, and the current through each component is calculated based on their individual impedance.
