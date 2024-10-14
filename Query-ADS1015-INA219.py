@@ -5,7 +5,7 @@ import board
 import busio
 import adafruit_ads1x15.ads1015 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
-from decimal import Decimal
+from decimal import Decimal, getcontext
 # import adafruit_ina219
 from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219, Gain, Mode
 # Base name should include full path and extra info
@@ -57,13 +57,14 @@ class ads_object:
     with open(self.file_path, "a") as file:
       file.write(data)
   def create_output_string(self):
-    ads_voltage = 0.0
-    ads_voltage = self.channel.voltage
+    getcontext().prec = 10
+    ads_voltage:float = self.channel.voltage
+    ads_voltage_dec:Decimal = Decimal(str(int(ads_voltage * 100000000))) / Decimal('100000000')
     # adc_value = chan_vcc.value
     time_in_ms_raw = int(time.time() * 1000) - self.start_time
     time_in_ms_as_str = f"{time_in_ms_raw}"
     time_in_ms = time_in_ms_as_str.zfill(self.start_time_str_len)
-    self.out = f"{time_in_ms},{ads_voltage}"
+    self.out = f"{time_in_ms},{ads_voltage_dec}"
   def display_on_screen(self):
     print(f"{self.out}")
   def get_next_sample(self):
@@ -103,33 +104,36 @@ class ina_object:
     with open(self.file_path, "a") as file:
       file.write(data)
   def create_output_string(self):
+    # sensor can measure 2 significant digits after decimal, and 8 before.
+    getcontext().prec = 10
     # Floats are not precise - use Decimal module
     # voltage on V- (load side)
     # Unit V per C example
-    # Step 4 mV, 12 bits = 3 significant digits
+    # Step 4 mV, 12 bits = 3 significant digits after decimal
     bus_voltage:float = self.ina.bus_voltage
+    # Convert to int to chop off the error, and then to str so that Decimal maintaines the exact value, and then move the decimal place back
+    bus_voltage_dec:Decimal = Decimal(str(int(bus_voltage * 100000000))) / Decimal('100000000')
     # voltage between V+ and V- across the shunt
     # Unit mV per C example
     # 10 uV step, 12 bits = 6 significant digits
     shunt_voltage:float = self.ina.shunt_voltage
+    # Convert to Decimal and then from uV to mV
+    shunt_voltage_dec:Decimal = (Decimal(str(int(shunt_voltage * 100000000))) / Decimal('100000000'))/Decimal("1000")
     # voltage on V+ (voltage source side) - load voltage
     # C and Python example different - whether shut_voltage by is in V or mV
-    v_plus:float = bus_voltage + (shunt_voltage/1000)
+    v_plus_dec:Decimal = bus_voltage_dec + shunt_voltage_dec
     # current in mA - shunt current - 8 significant digits
     current:float = self.ina.current
+    current_dec:Decimal = Decimal(str(int(current * 100000000))) / Decimal('100000000')
     # Shunt current A
-    shunt_current:float = current / 1000
+    shunt_current_dec:Decimal = current_dec / Decimal("1000")
     # Calculated power
-    power_calc = bus_voltage * shunt_current
+    power_calc_dec:Decimal = bus_voltage_dec * shunt_current_dec
     # Does that mean I can calculate impedance too?
     # Apparently not. Shut current is 0 sometimes
-    current_flt:float = self.ina.current
-    # If current is 0 then impedance is infinite, but we will just say 0
-    impedance_calc:float = 0
-    if current_flt != 0:
-      impedance_calc = bus_voltage / current_flt
-    # power in watts from register
+    impedance_calc_dec:Decimal = (bus_voltage_dec / shunt_current_dec) if shunt_current_dec > Decimal("0") else Decimal("0")
     power = self.ina.power
+    power_dec = Decimal(str(int(power * 100000000))) / Decimal('100000000')
     time_in_ms_raw = int(time.time() * 1000) - self.start_time
     time_in_ms_as_str = f"{time_in_ms_raw}"
     time_in_ms = time_in_ms_as_str.zfill(self.start_time_str_len)
@@ -138,7 +142,7 @@ class ina_object:
     if self.ina.overflow:
       print("Internal Math Overflow Detected (non ADC) 3.2 Amps exceeded!")
     else:
-      self.out = f"{time_in_ms:d},{bus_voltage:5.3f},{shunt_voltage:5.8f},{v_plus:5.8f},{current:5.8f},{power_calc:5.8f},{power:5.8f},{impedance_calc:5.8f}"
+      self.out = f"{time_in_ms:d},{bus_voltage_dec},{shunt_voltage_dec},{v_plus_dec},{current_dec},{power_calc_dec},{power_dec},{impedance_calc_dec}"
   def display_on_screen(self):
     print(f"{self.out}")
   def get_next_sample(self):

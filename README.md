@@ -50,6 +50,12 @@ chmod +x ./this-file.py
 - [INA219 API](https://docs.circuitpython.org/projects/ina219/en/stable/)
 - [INA219 Datasheet](https://cdn-learn.adafruit.com/downloads/pdf/adafruit-ina219-current-sensor-breakout.pdf)
 
+## Math note
+
+- Depending on how voltage, current or power are measured by the sensor the actual value will have 3 to 8 significant digits after the decimal.
+- Floating point numbers do not store the exact value, and add mantissa notation. Instead use the 'decimal' module.
+- Given that this can only measure up to 26 volts (two digits), then the precision should be 10.
+
 ## Basic formulas:
 
 - `Watts` = `V*I` = `I^2 * R` = `V^2/R`
