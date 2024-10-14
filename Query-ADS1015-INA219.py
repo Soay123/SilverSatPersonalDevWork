@@ -5,6 +5,7 @@ import board
 import busio
 import adafruit_ads1x15.ads1015 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
+from decimal import Decimal
 # import adafruit_ina219
 from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219, Gain, Mode
 # Base name should include full path and extra info
@@ -102,15 +103,21 @@ class ina_object:
     with open(self.file_path, "a") as file:
       file.write(data)
   def create_output_string(self):
+    # Floats are not precise - use Decimal module
     # voltage on V- (load side)
-    bus_voltage = self.ina.bus_voltage
+    # Unit V per C example
+    # Step 4 mV, 12 bits = 3 significant digits
+    bus_voltage:float = self.ina.bus_voltage
     # voltage between V+ and V- across the shunt
-    shunt_voltage = self.ina.shunt_voltage
-    # voltage on V+ (voltage source side)
-    v_plus = bus_voltage + shunt_voltage
-    # current in mA - possible this is an int
-    current = self.ina.current
-    # Shunt current
+    # Unit mV per C example
+    # 10 uV step, 12 bits = 6 significant digits
+    shunt_voltage:float = self.ina.shunt_voltage
+    # voltage on V+ (voltage source side) - load voltage
+    # C and Python example different - whether shut_voltage by is in V or mV
+    v_plus:float = bus_voltage + (shunt_voltage/1000)
+    # current in mA - shunt current - 8 significant digits
+    current:float = self.ina.current
+    # Shunt current A
     shunt_current:float = current / 1000
     # Calculated power
     power_calc = bus_voltage * shunt_current
@@ -131,7 +138,7 @@ class ina_object:
     if self.ina.overflow:
       print("Internal Math Overflow Detected (non ADC) 3.2 Amps exceeded!")
     else:
-      self.out = f"{time_in_ms:d},{bus_voltage:5.5f},{shunt_voltage:5.5f},{v_plus:5.5f},{current:5.5f},{power_calc:5.5f},{power:5.5f},{impedance_calc:5.5f}"
+      self.out = f"{time_in_ms:d},{bus_voltage:5.3f},{shunt_voltage:5.8f},{v_plus:5.8f},{current:5.8f},{power_calc:5.8f},{power:5.8f},{impedance_calc:5.8f}"
   def display_on_screen(self):
     print(f"{self.out}")
   def get_next_sample(self):

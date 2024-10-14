@@ -49,7 +49,6 @@ chmod +x ./this-file.py
 - [ADS1015 Datasheet](https://cdn-shop.adafruit.com/datasheets/ads1015.pdf)
 - [INA219 API](https://docs.circuitpython.org/projects/ina219/en/stable/)
 - [INA219 Datasheet](https://cdn-learn.adafruit.com/downloads/pdf/adafruit-ina219-current-sensor-breakout.pdf)
-  550,4700
 
 ## Basic formulas:
 
@@ -70,7 +69,8 @@ chmod +x ./this-file.py
 - Gain = 2/3 = 6.144v max; Gain = 1 = 4.096v max
 - Max gain error of .04% occurs at 85 degrees celsius.
 - Differential offset error at 3v over entire operating tempeture range is about 3 uV
-- Requires an input of at least 250 uA, .256v, means that at bottom of range R <=1024. So if you want to be able to sense the entire range with low power then the resistor should be between 530 and 1024 ohm. With more power the resistor should be between 530 and 13200 ohm.
+- Requires an input of at least 250 uA, .256v, means that at bottom of range R <=1024. So if you want to be able to sense the entire range with low power then the resistor should be between 530 and 1024 ohm. With 3.3v the resistor should be between 360 and 13200 ohm.
+- The most precise range is +/- .256v (.512v) evenly spread across a 16 bit value, but only as precise as 12 bits. Which comes out to 0.00000781 (8 significant decimal digits)
 
 2. Regarding the INA219
 
