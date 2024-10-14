@@ -273,5 +273,6 @@ Gnd---|---|-------|
 - To Do
   1. This still doesn't cover the effect of loading. Basically set the impedance on the Vout branch as high as possible (13200) and that controls your acceptable deviation from the ideal voltage divider.
   2. How to limit I on Vout without affecting Vout voltage. If V = I\*R then if I is decreased, then R must be increased.
+  3. Might be able to add a zener diode drain just before sensor for any over voltage.
 - Referance
   1. [Balancing Super Capacitors](https://www.we-online.com/catalog/media/o671684v410%20ANP090a_EN.pdf)
