@@ -8,15 +8,28 @@ Work related to the Silver Sat team
 
 ```
 # With the monitor and power unplugged from the Pi install the QWIIC shim
-# sudo raspi-config
-# Select Interfacing Options
-# Select 'Yes' that I2C kernel module should be enabled
-# Then Finish and reboot (shutdown -r now)
+
+# Enable I2C
+sudo raspi-config
+Select Interfacing Options
+Select 'Yes' that I2C kernel module should be enabled
+Then Finish and reboot (shutdown -r now)
+
+# Install Python3
 apt install python3
+python3 -m venv /home/me/Desktop/venv
+/home/me/Desktop/venv/pip3 install --upgrade pip
+/home/me/Desktop/venv/bin/pip3 install Adafruit-Blinka
+/home/me/Desktop/venv/bin/pip3 install adafruit-circuitpython-ads1x15
+/home/me/Desktop/venv/bin/pip3 install adafruit-circuitpython-ina219
+
+# Install Git
 apt install git
 git config --global user.name "John Doe"
 git config --global user.email johndoe@example.com
 git config --global init.defaultBranch main
+
+# Configure SSH
 mkdir ~/.ssh
 cd ~/.ssh
 ssh-keygen -t ed25519
@@ -24,20 +37,16 @@ chmod 700 ~/.ssh
 chmod 644 ~/.ssh/id_ed25519.pub
 chmod 600 ~/.ssh/id_ed25519
 
+# Clone repository
 <log into github and add public key>
 
-python3 -m venv /home/me/Desktop/venv
-/home/me/Desktop/venv/pip3 install --upgrade pip
-/home/me/Desktop/venv/bin/pip3 install Adafruit-Blinka
-/home/me/Desktop/venv/bin/pip3 install adafruit-circuitpython-ads1x15
-/home/me/Desktop/venv/bin/pip3 install adafruit-circuitpython-ina219
 mkdir /home/me/Desktop/code
 cd /home/me/Desktop/code
 git clone <whatever the git path to your repo is>
 cd repo-name
 
-# pythonpath should be the path to python3 in your virtual environment
-pythonpath=$(which python3)
+# Update the first line of a file with the python3 path
+pythonpath="/home/me/Desktop/venv/bin/python3"
 pythonpath="#\!$pythonpath"
 sed -i "1s/.\*/$pythonpath/" ./this-file.py
 chmod +x ./this-file.py
@@ -53,8 +62,12 @@ chmod +x ./this-file.py
 ## Math note
 
 - Depending on how voltage, current or power are measured by the sensor the actual value will have 3 to 8 significant digits after the decimal.
-- Floating point numbers do not store the exact value, and add mantissa notation. Instead use the 'decimal' module.
-- Given that this can only measure up to 26 volts (two digits), then the precision should be 10.
+  1. Read the datasheet for units. For example mV.
+  2. Read the datasheet for step. For example 100 uV.
+  3. Read the datasheet for gain. For example step \* gain.
+  4. Example gain is 16 (4 bits), and value is stored as 12 bits, making the largest number 16 bits, and the step 16 times as big. Which really means 7 significant digits total.
+- Floating point numbers do not store the exact value, and add mantissa notation. Instead use the 'decimal' module. Invoke the Decimal constructor with a string representation of the number.
+- Given that this can only measure up to 26 volts (two digits), then the precision should be 10. (maybe even just 7)
 
 ## Basic formulas:
 
@@ -73,26 +86,29 @@ chmod +x ./this-file.py
 - A huge advantage of 12 rather than 16 bits is faster samples per second. 128 sps to 3300 sps depending on how the api constructor is invoked.
 - Accuracy is a function of heat
 - Gain = 2/3 = 6.144v max; Gain = 1 = 4.096v max
+- So then at gain = 1, accuracy is 1 mV.
 - Max gain error of .04% occurs at 85 degrees celsius.
 - Differential offset error at 3v over entire operating tempeture range is about 3 uV
-- Requires an input of at least 250 uA, .256v, means that at bottom of range R <=1024. So if you want to be able to sense the entire range with low power then the resistor should be between 530 and 1024 ohm. With 3.3v the resistor should be between 360 and 13200 ohm.
-- The most precise range is +/- .256v (.512v) evenly spread across a 16 bit value, but only as precise as 12 bits. Which comes out to 0.00000781 (8 significant decimal digits)
+- Requires an input of at least 250 uA, .256v
+- Do not exceed 10 mA and VDD + .3v
+- With 3.3v, the resistor should be between (3.3 + .3)/.01 and 3.3/.00025 which is 360 to 13200 ohm.
+- The step is:
 
 2. Regarding the INA219
 
 - High Side (i.e. in series before load, rather than between load and ground).
-- Do not exceed 64 watts and 3.2 amps. (as best I can tell)
+- Do not exceed 26v and 3.2 amps. (as best I can tell), but try to stay within 2 amps
 - Ground does NOT need to be shared between load and QWIIC VDD
 - 12 Bit ADC - Gain might need to be set?
 - Put in the appropriate precautions if you are using an inductive load.
 - INA219 measures voltage and current (and therefore also power)
 - INA219 reports the average of 128 samples every 68.1 ms. (about 14 sps)
-- INA219 has an accuracy of .8 mA
+- INA219 has an accuracy of .8 mA (3.2/4096)
 
 3. Regarding Vin of sample vs. VDD of QWIIC
 
 - As discussed below some type of circuit would be needed to step down the voltage, but not to regulate it to a fixed amout.
-- Easiest solution is probably to use diodes.
+- Easiest solution is probably to use diodes - then loading is not a concern.
 
 ## Some reasoning about the electronics needed
 
@@ -158,11 +174,11 @@ Gnd---|---------------|
 
 - A level shifter using diodes in series with the load.
 
-1. That will drop the voltage about .6 volts per diode. (3 diodes)
+1. That will drop the voltage about .6 or .7 volts per diode. (3 to 4 diodes)
 2. Resistor values:
 
-- 5.3 Vin - 3.6 Vout = 1.7v
-- 1.7 div .6, +1 if 1.7 mod 6 != 0 thus 3 to 4 diodes (1.8 - 2.8 voltage drop)
+- 5.3 Vin - 3.3 Vout = 2.0v
+- 2.0 div .6, +1 if 2.0 mod 6 != 0, thus 3 to 4 diodes (1.8 - 2.8 voltage drop)
 - At least a 360 ohm load will be needed, given a Vout of 3.3v (3.6/.01 is minimum resistor value)
 
 3. The diodes provide a constant offset to the actual voltage
@@ -232,7 +248,9 @@ Vin---|530 Ohm|---|ADS1015|---Gnd
   4. Voltage at Vout can be calculated with the same formula as with resistors, or
 
   - Vout = Vin \* C1 / (C1 + C2)
-  - Current is based on frequency. Take that into account so that you do not exceed 10 mA
+  - Current is based on frequency.
+    1. Take that into account so that you do not exceed 10 mA.
+    2. A drain capacitor can be used to remove high frequencies
 
 ```
 
@@ -260,15 +278,16 @@ Gnd---|---|-------|
 
 - Diagram Notes
 
-  1. Cs1 = Cs2 = tiny pF are for stray capacitance
+  1. Cs1 = Cs2 = tiny nF are for stray capacitance
   2. C1, C2 for capacitive voltage divider for AC
   3. Rd1, Rd2 for damping (minimizes oscillation, such as voltage spikes, by reducing amplitude and frequency)
   4. R1 and R2 are the DC voltage divider resistors
 
   - This probably means that the following constraints need to be calcultated:
     1. Voltage divider composed of resistors Vin=5, Vout=3.3
-    2. Capacitive reactance + dampening resistors impedance where (Xc1 + Rd1) = R1; and (Xc2 + Rd2) = R2
+    2. Capacitive reactance + dampening resistor impedance where (Xc1 + Rd1) = R1; and (Xc2 + Rd2) = R2
     3. And the time constant (τ = RC) needs to be maintained so C1 \* Rd1 = C2 \* Rd2
+    - Setting Rd to 0 solves this problem but removes damping
 
 - To Do
   1. This still doesn't cover the effect of loading. Basically set the impedance on the Vout branch as high as possible (13200) and that controls your acceptable deviation from the ideal voltage divider.
