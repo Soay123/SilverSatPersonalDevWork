@@ -265,23 +265,26 @@ Gnd---|
 
 ```
 
-Vin---|---|--Cs1--|
-      C1  |       |
-      |   R1      |
-      Rd1 |       |
-Vout--|---|--Cs2--|
-      C2  |       |
-      |   R2      |
-      Rd2 |       |
-Gnd---|---|-------|
+Vin--------------|---|--Cs1--|
+                 C1  |       |
+                 |   R1      |
+                 Rd1 |       |
+|---|--R3--Vout--|---|--Cs2--|
+|   |            C2  |       |
+S   Z            |   R2      |
+|   |            Rd2 |       |
+|---|--Gnd-------|---|-------|
 ```
 
 - Diagram Notes
 
-  1. Cs1 = Cs2 = tiny nF are for stray capacitance
+  1. Cs1 = Cs2 = tiny nF drain for stray capacitance and high frequency
   2. C1, C2 for capacitive voltage divider for AC
   3. Rd1, Rd2 for damping (minimizes oscillation, such as voltage spikes, by reducing amplitude and frequency)
-  4. R1 and R2 are the DC voltage divider resistors
+  4. R1 and R2 are the DC voltage divider resistors (5v in, 3.3v out)
+  5. R3 13200 ohm
+  6. Z zener diode for 3.6v volt drain
+  7. S ADS1015 sensor
 
   - This probably means that the following constraints need to be calcultated:
     1. Voltage divider composed of resistors Vin=5, Vout=3.3
@@ -291,7 +294,5 @@ Gnd---|---|-------|
 
 - To Do
   1. This still doesn't cover the effect of loading. Basically set the impedance on the Vout branch as high as possible (13200) and that controls your acceptable deviation from the ideal voltage divider.
-  2. How to limit I on Vout without affecting Vout voltage. If V = I\*R then if I is decreased, then R must be increased.
-  3. Might be able to add a zener diode drain just before sensor for any over voltage.
 - Referance
   1. [Balancing Super Capacitors](https://www.we-online.com/catalog/media/o671684v410%20ANP090a_EN.pdf)
