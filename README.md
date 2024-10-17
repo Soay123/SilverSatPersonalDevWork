@@ -15,6 +15,7 @@ Select Interfacing Options
 Select 'Yes' that I2C kernel module should be enabled
 Then Finish and reboot (shutdown -r now)
 
+# If this is your first time using this Pi then start here:
 # Install Python3
 apt install python3
 python3 -m venv /home/me/Desktop/venv
@@ -37,19 +38,57 @@ chmod 700 ~/.ssh
 chmod 644 ~/.ssh/id_ed25519.pub
 chmod 600 ~/.ssh/id_ed25519
 
-# Clone repository
-<log into github and add public key>
+cat ~/.ssh/id_ed25519.pub
+# Copy the output. Its a long line and may wrap.
 
+# Log into github
+# Go to Settings -> GPG & SSH Keys
+# Create a new key (name does not matter)
+# Paste in text copied above
+
+# Clone repository
 mkdir /home/me/Desktop/code
 cd /home/me/Desktop/code
-git clone <whatever the git path to your repo is>
-cd repo-name
+git clone git@github.com:Soay123/SilverSatPersonalDevWork.git
+cd SilverSatPersonalDevWork
 
 # Update the first line of a file with the python3 path
 pythonpath="/home/me/Desktop/venv/bin/python3"
 pythonpath="#\!$pythonpath"
 sed -i "1s/.\*/$pythonpath/" ./this-file.py
 chmod +x ./this-file.py
+```
+
+```
+# If you are coming back to a Pi you already configured then:
+cd /home/me/Desktop/code/SilverSatPersonalDevWork
+git pull origin main
+
+## You made a local change to a file and already commited it locally
+## Make a copy of your work
+# git branch my-new-branch-name
+## delete your changes
+# git log
+## copy the second md5 hash from the top
+# git reset --hard <paste the md5 hash>
+# git pull origin main
+```
+
+```
+# If you get an ssh key authentication error then you probably
+# have added your key to more than one github repository.
+# Delete the key from both github repositories, and then add it back to one
+```
+
+```
+# Now your local and remote are in sync. You are ready to go
+# After editing your local copy
+git commit -a -m "Short description of the change" -m "An optional really detailed description of the change"
+git push origin main
+
+# If you create new file you would like to track then you can add them
+# by name or with a wildcard
+git add *
 ```
 
 ## Documentation:
