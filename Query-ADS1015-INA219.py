@@ -81,9 +81,10 @@ class ina_object:
     self.file_path = ""
     self.base_name=base_name
     # Default values
-    # set_calibration_32V_2A()    Initialize chip for 32V max and up to 2A (default)
-    #   Configures to INA219 to be able to measure up to 32V and 2A of current. Counter overflow occurs at 3.2A.
+    # set_calibration_32V_2A()   Initialize chip for 32V max and up to 2A (default) assumes a shunt resistor of 0.1 ohm. Other settings inclue v/a/ohm/overflow/step: 32/2/.1/3.2/781uA, 32v/1a/.1/1.3a/320uA, 16/5/.02/8/1593uA, 16/.4/.1/1.6/390uA
+    #   Configures the INA219 to be able to measure up to 32V and 2A of current. Counter overflow occurs at 3.2A.
     #   self.bus_voltage_range = BusVoltageRange.RANGE_32V
+    #   This is the largest gain
     #   self.gain = Gain.DIV_8_320MV
     #   self.bus_adc_resolution = ADCResolution.ADCRES_12BIT_1S
     #   self.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_1S
@@ -109,20 +110,28 @@ class ina_object:
     # Floats are not precise - use Decimal module
     # voltage on V- (load side)
     # Unit V per C example
-    # Step 4 mV, 12 bits = 3 significant digits after decimal
+    # 12 bits means 4096 steps
+    # Step 4 mV, 12 bits = 16.384 = 3 significant digits after decimal (5 total)
     bus_voltage:float = self.ina.bus_voltage
     # Convert to int to chop off the error, and then to str so that Decimal maintaines the exact value, and then move the decimal place back
     bus_voltage_dec:Decimal = Decimal(str(int(bus_voltage * 100000000))) / Decimal('100000000')
     # voltage between V+ and V- across the shunt
     # Unit mV per C example
-    # 10 uV step, 12 bits = 6 significant digits
+    # 10 uV step, 12 bits = .040960 = 6 significant digits
     shunt_voltage:float = self.ina.shunt_voltage
     # Convert to Decimal and then from uV to mV
     shunt_voltage_dec:Decimal = (Decimal(str(int(shunt_voltage * 100000000))) / Decimal('100000000'))/Decimal("1000")
     # voltage on V+ (voltage source side) - load voltage
     # C and Python example different - whether shut_voltage by is in V or mV
+    # Looks like mV
+    # So 2 significant digits before decimal and 6 afer
     v_plus_dec:Decimal = bus_voltage_dec + shunt_voltage_dec
-    # current in mA - shunt current - 8 significant digits
+    if v_plus_dec > Decimal("26"):
+      # From datasheet
+      print("WARNING: 26v exceeded!")
+    # current in mA - shunt current - 8 significant digits after decimal
+    # Step: 3.2/4096 = .00078125
+    # 1 significant digit before decimal, and 8 after
     current:float = self.ina.current
     current_dec:Decimal = Decimal(str(int(current * 100000000))) / Decimal('100000000')
     # Shunt current A
@@ -138,9 +147,10 @@ class ina_object:
     time_in_ms_as_str = f"{time_in_ms_raw}"
     time_in_ms = time_in_ms_as_str.zfill(self.start_time_str_len)
     self.out = ""
-    # Check internal calculations haven't overflowed (doesn't detect ADC overflows)
+    # Check for overflow of internal calculations (doesn't detect ADC overflows)
     if self.ina.overflow:
-      print("Internal Math Overflow Detected (non ADC) 3.2 Amps exceeded!")
+      # Set by constructor - this is the default
+      print("WARNING: Internal math overflow detected (non ADC) 3.2 Amps exceeded!")
     else:
       self.out = f"{time_in_ms:d},{bus_voltage_dec},{shunt_voltage_dec},{v_plus_dec},{current_dec},{power_calc_dec},{power_dec},{impedance_calc_dec}"
   def display_on_screen(self):
