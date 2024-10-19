@@ -6,7 +6,6 @@ import busio
 import adafruit_ads1x15.ads1015 as ADS
 from adafruit_ads1x15.analog_in import AnalogIn
 from decimal import Decimal, getcontext
-# import adafruit_ina219
 from adafruit_ina219 import ADCResolution, BusVoltageRange, INA219, Gain, Mode
 # Base name should include full path and extra info
 class find_unique_filename:
@@ -84,8 +83,9 @@ class ina_object:
     # set_calibration_32V_2A()   Initialize chip for 32V max and up to 2A (default) assumes a shunt resistor of 0.1 ohm. Other settings inclue v/a/ohm/overflow/step: 32/2/.1/3.2/781uA, 32v/1a/.1/1.3a/320uA, 16/5/.02/8/1593uA, 16/.4/.1/1.6/390uA
     #   Configures the INA219 to be able to measure up to 32V and 2A of current. Counter overflow occurs at 3.2A.
     #   self.bus_voltage_range = BusVoltageRange.RANGE_32V
-    #   This is the largest gain
+    # This is the largest gain (1,2,4,8) But I am not sure how that figures in.
     #   self.gain = Gain.DIV_8_320MV
+    # Not sure what this resolution means - this is the finest resolution, but INA should be able to do 14 sps
     #   self.bus_adc_resolution = ADCResolution.ADCRES_12BIT_1S
     #   self.shunt_adc_resolution = ADCResolution.ADCRES_12BIT_1S
     #   self.mode = Mode.SANDBVOLT_CONTINUOUS
